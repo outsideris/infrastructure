@@ -1,19 +1,10 @@
+// manage feeds that tweeted from nodejs-ko blog
 resource "aws_s3_bucket" "nodejs-ko" {
   bucket = "nodejs-ko"
   acl    = "private"
 }
 
-resource "aws_s3_bucket" "nplambda-test-1476121205447" {
-  bucket = "nplambda.test.1476121205447"
-  acl    = "private"
-}
-
-resource "aws_s3_bucket" "vault-test-outsider" {
-  bucket = "vault-test-outsider"
-  acl    = "private"
-}
-
-// sideeffect 용 terraform state
+// terraform state for sideeffect
 resource "aws_s3_bucket" "terraform-state" {
   bucket = "kr.sideeffect.terraform.state"
   acl    = "private"
@@ -33,7 +24,7 @@ resource "aws_s3_bucket" "terraform-state" {
   }
 }
 
-// 로깅용 버킷
+// for logging
 resource "aws_s3_bucket" "logs" {
   bucket = "kr.sideeffect.logs"
   acl    = "log-delivery-write"
