@@ -76,11 +76,12 @@ resource "aws_nat_gateway" "side_effect_nat" {
   subnet_id = "${aws_subnet.side_effect_public_subnet1.id}"
   depends_on = ["aws_internet_gateway.side_effect_igw"]
 } 
+
 // private route table 
 resource "aws_route_table" "side_effect_private_route_table" {
   vpc_id = "${aws_vpc.side_effect.id}"
   tags {
-    Name = "private route table"
+    Name = "private"
   }
 }
  
@@ -126,5 +127,165 @@ resource "aws_default_security_group" "side_effect_default" {
 
   tags {
     Name = "default"
+  }
+}
+
+// default network acl
+// keep it do nothing
+resource "aws_default_network_acl" "side_effect_default" {
+  default_network_acl_id = "${aws_vpc.side_effect.default_network_acl_id}"
+
+  ingress {
+    protocol   = -1
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  egress {
+    protocol   = -1
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  tags {
+    Name = "default"
+  }
+}
+
+// network acl for public subnets
+resource "aws_network_acl" "side_effect_public" {
+  vpc_id = "${aws_vpc.side_effect.id}"
+  subnet_ids = [
+    "${aws_subnet.side_effect_public_subnet1.id}",
+  ]
+
+  tags {
+    Name = "public"
+  }
+}
+
+resource "aws_network_acl_rule" "side_effect_public_ingress80" {
+  network_acl_id = "${aws_network_acl.side_effect_public.id}"
+  rule_number = 100
+  rule_action = "allow"
+  egress = false
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 80
+  to_port = 80
+}
+
+resource "aws_network_acl_rule" "side_effect_public_egress80" {
+  network_acl_id = "${aws_network_acl.side_effect_public.id}"
+  rule_number = 100
+  rule_action = "allow"
+  egress = true
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 80
+  to_port = 80
+}
+
+resource "aws_network_acl_rule" "side_effect_public_ingress443" {
+  network_acl_id = "${aws_network_acl.side_effect_public.id}"
+  rule_number = 110
+  rule_action = "allow"
+  egress = false
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 443
+  to_port = 443
+}
+
+resource "aws_network_acl_rule" "side_effect_public_egress443" {
+  network_acl_id = "${aws_network_acl.side_effect_public.id}"
+  rule_number = 110
+  rule_action = "allow"
+  egress = true
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 443
+  to_port = 443
+}
+
+resource "aws_network_acl_rule" "side_effect_public_ingress22" {
+  network_acl_id = "${aws_network_acl.side_effect_public.id}"
+  rule_number = 120
+  rule_action = "allow"
+  egress = false
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 22
+  to_port = 22
+}
+
+resource "aws_network_acl_rule" "side_effect_public_egress22" {
+  network_acl_id = "${aws_network_acl.side_effect_public.id}"
+  rule_number = 120
+  rule_action = "allow"
+  egress = true
+  protocol = "tcp"
+  cidr_block = "${aws_vpc.side_effect.cidr_block}"
+  from_port = 22
+  to_port = 22
+}
+
+resource "aws_network_acl_rule" "side_effect_public_ingress_ephemeral" {
+  network_acl_id = "${aws_network_acl.side_effect_public.id}"
+  rule_number = 140
+  rule_action = "allow"
+  egress = false
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 1024
+  to_port = 65535
+}
+
+resource "aws_network_acl_rule" "side_effect_public_egress_ephemeral" {
+  network_acl_id = "${aws_network_acl.side_effect_public.id}"
+  rule_number = 140
+  rule_action = "allow"
+  egress = true
+  protocol = "tcp"
+  cidr_block = "0.0.0.0/0"
+  from_port = 1024
+  to_port = 65535
+}
+
+// network acl for private subnets
+resource "aws_network_acl" "side_effect_private" {
+  vpc_id = "${aws_vpc.side_effect.id}"
+
+  egress {
+    protocol = -1
+    rule_no = 100
+    action = "allow"
+    cidr_block = "${aws_vpc.side_effect.cidr_block}"
+    from_port = 0
+    to_port = 0
+  }
+
+  ingress {
+    protocol = -1
+    rule_no = 100
+    action = "allow"
+    cidr_block = "${aws_vpc.side_effect.cidr_block}"
+    from_port = 0
+    to_port = 0
+  }
+
+  subnet_ids = [
+    "${aws_subnet.side_effect_private_subnet1.id}",
+    "${aws_subnet.side_effect_private_subnet2.id}"
+  ]
+
+  tags {
+    Name = "private"
   }
 }
