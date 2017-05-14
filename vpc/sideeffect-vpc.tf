@@ -289,3 +289,51 @@ resource "aws_network_acl" "side_effect_private" {
     Name = "private"
   }
 }
+
+// Basiton Host
+resource "aws_security_group" "side_effect_bastion" {
+  name = "bastion"
+  description = "Security group for bastion instance"
+  vpc_id = "${aws_vpc.side_effect.id}"
+
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "bastion"
+  }
+}
+
+resource "aws_instance" "side_effect_bastion" {
+  ami = "${data.aws_ami.ubuntu.id}"
+  availability_zone = "${aws_subnet.side_effect_public_subnet1.availability_zone}"
+  instance_type = "t2.nano"
+  key_name = "${var.keypair}"
+  vpc_security_group_ids = [
+    "${aws_default_security_group.side_effect_default.id}",
+    "${aws_security_group.side_effect_bastion.id}"
+  ]
+  subnet_id = "${aws_subnet.side_effect_public_subnet1.id}"
+  associate_public_ip_address = true
+
+  tags {
+    Name = "bastion"
+  }
+}
+
+resource "aws_eip" "side_effect_bastion" {
+  vpc = true
+  instance = "${aws_instance.side_effect_bastion.id}"
+  depends_on = ["aws_internet_gateway.side_effect_igw"]
+}
