@@ -1,0 +1,13 @@
+= AWS Global Infrastructure
+Global resources on AWS by Terraform
+
+== Prerequisites
+* link:https://www.terraform.io/[Terraform] v0.9.4+
+
+== Usage
+
+```sh
+$ terraform plan -out=plan
+
+$ terraform apply plan
+```
