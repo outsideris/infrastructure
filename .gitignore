@@ -1,2 +1,5 @@
 .envrc
 .terraform/
+terraform.tfstate.backup
+plan
+crash.log
