@@ -1,0 +1,20 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": ""
+  },
+  "_source_ami_comments": "Ubuntu Server 16.04 LTS (HVM), SSD Volume Type",
+  "_vpc_comments": "in side effect vpc",
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "ap-northeast-1",
+    "source_ami": "ami-afb09dc8",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "outsider-aws-ubuntu 16.04 {{timestamp}}",
+    "vpc_id": "vpc-c8533cac",
+    "subnet_id": "subnet-2784b551"
+  }]
+}

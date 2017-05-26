@@ -1,0 +1,13 @@
+= Packer
+Building AMIs that I will use on AWS
+
+=== Prerequisites
+* link:https://www.packer.io/[Packer] v1.0.0+
+
+=== Usage
+
+```
+$ packer validate ubuntu.json
+
+$ packer build ubuntu.json
+```
