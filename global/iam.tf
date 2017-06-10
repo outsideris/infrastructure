@@ -75,7 +75,11 @@ data "aws_iam_policy_document" "apex-default" {
       "logs:PutLogEvents",
       "apigateway:*",
       "iam:*",
-      "events:*"
+      "events:*",
+      "s3:*",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem"
     ]
 
     resources = [
