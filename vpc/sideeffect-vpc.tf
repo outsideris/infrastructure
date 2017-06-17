@@ -75,16 +75,16 @@ resource "aws_nat_gateway" "side_effect_nat" {
   allocation_id = "${aws_eip.side_effect_nat_eip.id}"
   subnet_id = "${aws_subnet.side_effect_public_subnet1.id}"
   depends_on = ["aws_internet_gateway.side_effect_igw"]
-} 
+}
 
-// private route table 
+// private route table
 resource "aws_route_table" "side_effect_private_route_table" {
   vpc_id = "${aws_vpc.side_effect.id}"
   tags {
     Name = "private"
   }
 }
- 
+
 resource "aws_route" "private_route" {
   route_table_id = "${aws_route_table.side_effect_private_route_table.id}"
   destination_cidr_block = "0.0.0.0/0"
@@ -96,7 +96,7 @@ resource "aws_route_table_association" "side_effect_public_subnet_association" {
   subnet_id = "${aws_subnet.side_effect_public_subnet1.id}"
   route_table_id = "${aws_vpc.side_effect.main_route_table_id}"
 }
- 
+
 resource "aws_route_table_association" "side_effect_private_subnet1_association" {
   subnet_id = "${aws_subnet.side_effect_private_subnet1.id}"
   route_table_id = "${aws_route_table.side_effect_private_route_table.id}"
@@ -336,4 +336,29 @@ resource "aws_eip" "side_effect_bastion" {
   vpc = true
   instance = "${aws_instance.side_effect_bastion.id}"
   depends_on = ["aws_internet_gateway.side_effect_igw"]
+}
+
+# security groups
+resource "aws_security_group" "sideeffect_ephemeral_ports" {
+  name = "sideeffect_ephemeral_ports"
+  description = "Security group for ephemeral ports"
+  vpc_id = "${aws_vpc.side_effect.id}"
+
+  ingress {
+    from_port = 32768
+    to_port = 61000
+    protocol = "tcp"
+    self = true
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "ephemeral-ports"
+  }
 }
