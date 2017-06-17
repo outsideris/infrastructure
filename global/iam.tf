@@ -31,6 +31,29 @@ data "aws_iam_policy_document" "nodejs-ko-twitter_lambda_function" {
   }
 }
 
+resource "aws_iam_role" "ecs_instance_role" {
+  name = "ecsInstanceRole"
+  path = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.ecs_instance_role.json}"
+}
+data "aws_iam_policy_document" "ecs_instance_role" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
+
+    principals = {
+      type = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+resource "aws_iam_policy_attachment" "ecs_instance_role" {
+  name = "AmazonEC2ContainerServiceforEC2Role"
+  roles = ["${aws_iam_role.ecs_instance_role.id}"]
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
 # policy
 resource "aws_iam_policy" "apex-default" {
   name = "apex-default"
@@ -165,4 +188,10 @@ resource "aws_iam_group_membership" "apex" {
   name = "apex-group-membership"
   users = ["${aws_iam_user.apex-basic.name}"]
   group = "${aws_iam_group.apex.name}"
+}
+
+# instance profiles
+resource "aws_iam_instance_profile" "ecs_instance_role" {
+  name = "ecsInstanceRole"
+  role = "${aws_iam_role.ecs_instance_role.name}"
 }
