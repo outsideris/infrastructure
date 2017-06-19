@@ -13,3 +13,7 @@ output "iam_user_outsider_name" {
 output "iam_user_outsider_arn" {
   value = "${aws_iam_user.outsider.arn}"
 }
+
+output "route53_sideeffect_kr_zone_id" {
+  value = "${aws_route53_zone.sideeffect_kr.zone_id}"
+}
