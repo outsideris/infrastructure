@@ -45,3 +45,9 @@ resource "aws_autoscaling_group" "sideeffect" {
     }
   ]
 }
+
+# services
+resource "aws_ecs_task_definition" "popular_convention" {
+  family = "popular-convention"
+  container_definitions = "${file("task-definitions/popular-convention.json")}"
+}

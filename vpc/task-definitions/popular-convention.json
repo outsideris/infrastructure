@@ -1,0 +1,34 @@
+[
+  {
+    "name": "popular-convention",
+    "image": "outsideris/popularconvention:1.0",
+    "cpu": 1,
+    "memory": 256,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8200,
+        "hostPort": 0
+      }
+    ],
+    "environment" : [
+      { "name" : "NODE_ENV", "value" : "production" },
+      { "name" : "MONGODB_HOST", "value" : "mongodb" },
+      { "name" : "MONGODB_PORT", "value" : "27017" }
+    ],
+    "links": ["popular-convention-mongodb:mongodb"]
+  },
+  {
+    "name": "popular-convention-mongodb",
+    "image": "outsideris/popularconvention-mongodb:1.0",
+    "cpu": 1,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 27017,
+        "hostPort": 0
+      }
+    ]
+  }
+]
