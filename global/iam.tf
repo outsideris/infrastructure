@@ -54,6 +54,29 @@ resource "aws_iam_policy_attachment" "ecs_instance_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
+resource "aws_iam_role" "ecs_service_role" {
+  name = "ecsServiceRole"
+  path = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.ecs_service_role.json}"
+}
+data "aws_iam_policy_document" "ecs_service_role" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
+
+    principals = {
+      type = "Service"
+      identifiers = ["ecs.amazonaws.com"]
+    }
+  }
+}
+resource "aws_iam_policy_attachment" "ecs_service_role" {
+  name = "AmazonEC2ContainerServiceforEC2Role"
+  roles = ["${aws_iam_role.ecs_service_role.id}"]
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
+}
+
 # policy
 resource "aws_iam_policy" "apex-default" {
   name = "apex-default"
