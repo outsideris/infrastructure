@@ -30,6 +30,16 @@ resource "aws_subnet" "side_effect_public_subnet1" {
   }
 }
 
+resource "aws_subnet" "side_effect_public_subnet2" {
+  vpc_id = "${aws_vpc.side_effect.id}"
+  cidr_block = "10.10.2.0/24"
+  map_public_ip_on_launch = true
+  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+  tags = {
+    Name = "public-az-2"
+  }
+}
+
 // private subnets
 resource "aws_subnet" "side_effect_private_subnet1" {
   vpc_id = "${aws_vpc.side_effect.id}"
@@ -92,8 +102,13 @@ resource "aws_route" "private_route" {
 }
 
 // associate subnets to route tables
-resource "aws_route_table_association" "side_effect_public_subnet_association" {
+resource "aws_route_table_association" "side_effect_public_subnet1_association" {
   subnet_id = "${aws_subnet.side_effect_public_subnet1.id}"
+  route_table_id = "${aws_vpc.side_effect.main_route_table_id}"
+}
+
+resource "aws_route_table_association" "side_effect_public_subnet2_association" {
+  subnet_id = "${aws_subnet.side_effect_public_subnet2.id}"
   route_table_id = "${aws_vpc.side_effect.main_route_table_id}"
 }
 
@@ -163,6 +178,7 @@ resource "aws_network_acl" "side_effect_public" {
   vpc_id = "${aws_vpc.side_effect.id}"
   subnet_ids = [
     "${aws_subnet.side_effect_public_subnet1.id}",
+    "${aws_subnet.side_effect_public_subnet2.id}",
   ]
 
   tags {
