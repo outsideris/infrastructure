@@ -28,4 +28,25 @@ resource "aws_s3_bucket" "terraform-state" {
 resource "aws_s3_bucket" "logs" {
   bucket = "kr.sideeffect.logs"
   acl    = "log-delivery-write"
+  policy = <<POLICY
+{
+  "Id": "Policy1498286768375",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1498286757157",
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::kr.sideeffect.logs/alb/AWSLogs/410655858509/*",
+      "Principal": {
+        "AWS": [
+          "582318560864"
+        ]
+      }
+    }
+  ]
+}
+POLICY
 }

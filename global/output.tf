@@ -21,3 +21,7 @@ output "iam_role_ecs_service_role_arn" {
 output "route53_sideeffect_kr_zone_id" {
   value = "${aws_route53_zone.sideeffect_kr.zone_id}"
 }
+
+output "s3_bucket_logs_bucket" {
+  value = "${aws_s3_bucket.logs.bucket}"
+}
