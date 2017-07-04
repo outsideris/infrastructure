@@ -1,24 +1,5 @@
-// my key pair
-variable "keypair" {
-  default = "outsider-aws"
-}
-
 // availability zones
 data "aws_availability_zones" "available" {}
-
-// latest ubuntu ami
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  filter {
-    name = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
-  }
-  filter {
-    name = "virtualization-type"
-    values = ["hvm"]
-  }
-  owners = ["099720109477"] # Canonical
-}
 
 // global terraform
 data "terraform_remote_state" "global" {
@@ -26,6 +7,19 @@ data "terraform_remote_state" "global" {
   config {
     bucket = "kr.sideeffect.terraform.state"
     key = "global/terraform.tfstate"
+    region = "ap-northeast-1"
+    encrypt = true
+    lock_table = "SideEffectTerraformStateLock"
+    acl = "bucket-owner-full-control"
+  }
+}
+
+// vpc terraform
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+  config {
+    bucket = "kr.sideeffect.terraform.state"
+    key = "vpc/terraform.tfstate"
     region = "ap-northeast-1"
     encrypt = true
     lock_table = "SideEffectTerraformStateLock"
