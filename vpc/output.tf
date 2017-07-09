@@ -28,6 +28,10 @@ output "side_effect_bastion_sg" {
   value = "${aws_security_group.side_effect_bastion.id}"
 }
 
+output "side_effect_public_web_sg" {
+  value = "${aws_security_group.side_effect_public_web.id}"
+}
+
 output "ecs_side_effect_id" {
   value = "${aws_ecs_cluster.sideeffect.id}"
 }

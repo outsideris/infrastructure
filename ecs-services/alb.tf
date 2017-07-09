@@ -4,6 +4,7 @@ resource "aws_alb" "side_effect" {
   security_groups = [
     "${data.terraform_remote_state.vpc.side_effect_default_sg}",
     "${data.terraform_remote_state.vpc.side_effect_ephemeral_ports_sg}",
+    "${data.terraform_remote_state.vpc.side_effect_public_web_sg}",
   ]
   subnets = [
     "${data.terraform_remote_state.vpc.side_effect_public_subnets}"

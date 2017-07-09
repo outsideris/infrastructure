@@ -367,6 +367,31 @@ resource "aws_security_group" "side_effect_bastion" {
   }
 }
 
+// allow public access
+resource "aws_security_group" "side_effect_public_web" {
+  name = "public_web"
+  description = "Allow to access 80/443 from anywhere"
+  vpc_id = "${aws_vpc.side_effect.id}"
+
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "public-web"
+  }
+}
+
 resource "aws_instance" "side_effect_bastion" {
   ami = "${data.aws_ami.ubuntu.id}"
   availability_zone = "${aws_subnet.side_effect_public_subnet1.availability_zone}"
