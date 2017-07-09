@@ -1,9 +1,9 @@
 [
   {
     "name": "popular-convention",
-    "image": "outsideris/popularconvention:1.0",
-    "cpu": 1,
-    "memory": 256,
+    "image": "outsideris/popularconvention:1.1",
+    "cpu": 100,
+    "memory": 128,
     "essential": true,
     "portMappings": [
       {
@@ -20,8 +20,8 @@
   {
     "name": "popular-convention-mongodb",
     "image": "outsideris/popularconvention-mongodb:1.0",
-    "cpu": 1,
-    "memory": 512,
+    "cpu": 100,
+    "memory": 128,
     "essential": true,
     "portMappings": [
       {
