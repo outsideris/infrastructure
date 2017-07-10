@@ -50,3 +50,24 @@ resource "aws_s3_bucket" "logs" {
 }
 POLICY
 }
+
+resource "aws_s3_bucket" "labs_sideeffect_kr" {
+  bucket = "kr.sideeffect.labs"
+  acl = "private"
+  policy = "${data.aws_iam_policy_document.labs_sideeffect_kr.json}"
+
+  website {
+    index_document = "index.html"
+  }
+}
+data "aws_iam_policy_document" "labs_sideeffect_kr" {
+  statement {
+    actions = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::kr.sideeffect.labs/*"]
+
+    principals {
+      type = "AWS"
+      identifiers = ["${aws_cloudfront_origin_access_identity.labs_sideeffect_kr.iam_arn}"]
+    }
+  }
+}
