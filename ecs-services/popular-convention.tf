@@ -11,7 +11,8 @@ resource "aws_ecs_service" "popular_convention" {
   iam_role = "${data.terraform_remote_state.global.iam_role_ecs_service_role_arn}"
 
   depends_on = [
-    "aws_alb_listener.side_effect",
+    "aws_alb_listener.side_effect_http",
+    "aws_alb_listener.side_effect_https",
   ]
 
   placement_strategy {

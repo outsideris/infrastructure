@@ -22,7 +22,7 @@ resource "aws_alb" "side_effect" {
   }
 }
 
-resource "aws_alb_listener" "side_effect" {
+resource "aws_alb_listener" "side_effect_http" {
   load_balancer_arn = "${aws_alb.side_effect.arn}"
   port = "80"
   protocol = "HTTP"
@@ -33,8 +33,36 @@ resource "aws_alb_listener" "side_effect" {
   }
 }
 
-resource "aws_alb_listener_rule" "popular_convention" {
-  listener_arn = "${aws_alb_listener.side_effect.arn}"
+resource "aws_alb_listener_rule" "popular_convention_http" {
+  listener_arn = "${aws_alb_listener.side_effect_http.arn}"
+  priority = 100
+
+  action {
+    type = "forward"
+    target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["/popularconvention/*"]
+  }
+}
+
+resource "aws_alb_listener" "side_effect_https" {
+  load_balancer_arn = "${aws_alb.side_effect.arn}"
+  port = "443"
+  protocol = "HTTPS"
+  ssl_policy = "ELBSecurityPolicy-2016-08"
+  certificate_arn = "${data.terraform_remote_state.global.sideeffect_kr_certificate_arn}"
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
+    type             = "forward"
+  }
+}
+
+resource "aws_alb_listener_rule" "popular_convention_https" {
+  listener_arn = "${aws_alb_listener.side_effect_https.arn}"
   priority = 100
 
   action {
