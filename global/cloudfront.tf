@@ -4,12 +4,15 @@ resource "aws_cloudfront_origin_access_identity" "labs_sideeffect_kr" {
 
 resource "aws_cloudfront_distribution" "labs_sideeffect_kr" {
   origin {
-    domain_name = "${aws_s3_bucket.labs_sideeffect_kr.bucket_domain_name}"
+    domain_name = "${aws_s3_bucket.labs_sideeffect_kr.website_endpoint}"
     origin_path = ""
-    origin_id = "labs_sideeffect_kr"
+    origin_id = "S3-${aws_s3_bucket.labs_sideeffect_kr.bucket}"
 
-    s3_origin_config {
-      origin_access_identity = "${aws_cloudfront_origin_access_identity.labs_sideeffect_kr.cloudfront_access_identity_path}"
+    custom_origin_config {
+      origin_protocol_policy = "http-only"
+      http_port = "80"
+      https_port = "443"
+      origin_ssl_protocols = ["SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"]
     }
   }
 
@@ -18,11 +21,12 @@ resource "aws_cloudfront_distribution" "labs_sideeffect_kr" {
   enabled = true
   is_ipv6_enabled = false
   default_root_object = "index.html"
+  http_version = "http2"
 
   default_cache_behavior {
     allowed_methods = ["GET", "HEAD"]
     cached_methods = ["GET", "HEAD"]
-    target_origin_id = "labs_sideeffect_kr"
+    target_origin_id = "S3-${aws_s3_bucket.labs_sideeffect_kr.bucket}"
 
     forwarded_values {
       query_string = false
