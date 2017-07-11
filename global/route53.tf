@@ -26,6 +26,7 @@ resource "aws_route53_record" "www_sideeffect_kr" {
   }
 }
 
+# labs
 resource "aws_route53_record" "labs_sideeffect_kr" {
   zone_id = "${aws_route53_zone.sideeffect_kr.zone_id}"
   name = "labs.sideeffect.kr"
@@ -34,6 +35,19 @@ resource "aws_route53_record" "labs_sideeffect_kr" {
   alias {
     name = "${aws_cloudfront_distribution.labs_sideeffect_kr.domain_name}"
     zone_id = "${aws_cloudfront_distribution.labs_sideeffect_kr.hosted_zone_id}"
+    evaluate_target_health = false
+  }
+}
+
+# node.js old api documents
+resource "aws_route53_record" "nodejs_sideeffect_kr" {
+  zone_id = "${aws_route53_zone.sideeffect_kr.zone_id}"
+  name = "nodejs.sideeffect.kr"
+  type = "A"
+
+  alias {
+    name = "${aws_cloudfront_distribution.nodejs_sideeffect_kr.domain_name}"
+    zone_id = "${aws_cloudfront_distribution.nodejs_sideeffect_kr.hosted_zone_id}"
     evaluate_target_health = false
   }
 }
