@@ -8,8 +8,8 @@ resource "aws_route53_record" "sideeffect_kr" {
   type = "A"
 
   alias {
-    name = "${data.terraform_remote_state.ecs_services.side_effect_alb_dns}"
-    zone_id = "${data.terraform_remote_state.ecs_services.side_effect_alb_zone_id}"
+    name = "${aws_route53_record.www_sideeffect_kr.name}"
+    zone_id = "${aws_route53_record.www_sideeffect_kr.zone_id}"
     evaluate_target_health = false
   }
 }
