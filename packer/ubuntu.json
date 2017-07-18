@@ -16,5 +16,15 @@
     "ami_name": "outsider-aws-ubuntu 16.04 {{timestamp}}",
     "vpc_id": "vpc-c8533cac",
     "subnet_id": "subnet-2784b551"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "sudo touch /etc/apt/sources.list.d/pgdg.list",
+      "sudo bash -c 'echo \"deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main\" >> /etc/apt/sources.list.d/pgdg.list'",
+      "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -",
+      "sudo apt-get update",
+      "sudo apt-get install -y postgresql-client-9.6 mysql-client"
+    ]
   }]
 }
