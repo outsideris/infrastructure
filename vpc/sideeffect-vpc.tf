@@ -23,7 +23,7 @@ resource "aws_default_route_table" "side_effect" {
 resource "aws_subnet" "side_effect_public_subnet1" {
   vpc_id = "${aws_vpc.side_effect.id}"
   cidr_block = "10.10.1.0/24"
-  map_public_ip_on_launch = false
+  map_public_ip_on_launch = true
   availability_zone = "${data.aws_availability_zones.available.names[0]}"
   tags = {
     Name = "public-az-1"
@@ -393,7 +393,7 @@ resource "aws_security_group" "side_effect_public_web" {
 }
 
 resource "aws_instance" "side_effect_bastion" {
-  ami = "${data.aws_ami.ubuntu.id}"
+  ami = "${data.aws_ami.outsider.id}"
   availability_zone = "${aws_subnet.side_effect_public_subnet1.availability_zone}"
   instance_type = "t2.nano"
   key_name = "${var.keypair}"

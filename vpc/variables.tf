@@ -20,6 +20,20 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+// latest my own ami
+data "aws_ami" "outsider" {
+  most_recent = true
+  filter {
+    name = "name"
+    values = ["outsider-aws-ubuntu*"]
+  }
+  filter {
+    name = "virtualization-type"
+    values = ["hvm"]
+  }
+  owners = ["410655858509"] # me
+}
+
 // global terraform
 data "terraform_remote_state" "global" {
   backend = "s3"
