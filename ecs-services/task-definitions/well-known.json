@@ -1,0 +1,14 @@
+[
+  {
+    "name": "well-known",
+    "image": "outsideris/sideeffect-wellknown:972f1b4",
+    "cpu": 50,
+    "memory": 64,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80
+      }
+    ]
+  }
+]

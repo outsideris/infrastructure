@@ -22,6 +22,7 @@ resource "aws_alb" "side_effect" {
   }
 }
 
+# http
 resource "aws_alb_listener" "side_effect_http" {
   load_balancer_arn = "${aws_alb.side_effect.arn}"
   port = "80"
@@ -48,6 +49,22 @@ resource "aws_alb_listener_rule" "popular_convention_http" {
   }
 }
 
+resource "aws_alb_listener_rule" "well_known_http" {
+  listener_arn = "${aws_alb_listener.side_effect_http.arn}"
+  priority = 200
+
+  action {
+    type = "forward"
+    target_group_arn = "${aws_alb_target_group.well_known.arn}"
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["/.well-known/*"]
+  }
+}
+
+# https
 resource "aws_alb_listener" "side_effect_https" {
   load_balancer_arn = "${aws_alb.side_effect.arn}"
   port = "443"
@@ -73,5 +90,20 @@ resource "aws_alb_listener_rule" "popular_convention_https" {
   condition {
     field  = "path-pattern"
     values = ["/popularconvention/*"]
+  }
+}
+
+resource "aws_alb_listener_rule" "well_known_https" {
+  listener_arn = "${aws_alb_listener.side_effect_https.arn}"
+  priority = 200
+
+  action {
+    type = "forward"
+    target_group_arn = "${aws_alb_target_group.well_known.arn}"
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["/.well-known/*"]
   }
 }
