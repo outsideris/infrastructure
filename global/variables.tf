@@ -36,3 +36,5 @@ data "terraform_remote_state" "us_east_1" {
     acl = "bucket-owner-full-control"
   }
 }
+
+data "aws_elb_service_account" "main" {}

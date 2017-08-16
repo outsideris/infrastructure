@@ -28,27 +28,64 @@ resource "aws_s3_bucket" "terraform-state" {
 resource "aws_s3_bucket" "logs" {
   bucket = "kr.sideeffect.logs"
   acl    = "log-delivery-write"
-  policy = <<POLICY
-{
-  "Id": "Policy1498286768375",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1498286757157",
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::kr.sideeffect.logs/alb/AWSLogs/410655858509/*",
-      "Principal": {
-        "AWS": [
-          "582318560864"
-        ]
-      }
-    }
-  ]
+  policy = "${data.aws_iam_policy_document.aws_s3_bucket_logs.json}"
 }
-POLICY
+data "aws_iam_policy_document" "aws_s3_bucket_logs" {
+  statement {
+    sid = "Stmt1498286757157"
+    actions = [
+      "s3:PutObject"
+    ]
+
+    resources = [
+      "arn:aws:s3:::kr.sideeffect.logs/alb/AWSLogs/410655858509/*"
+    ]
+
+    principals = {
+      type = "AWS"
+      identifiers = [
+        "${data.aws_elb_service_account.main.arn}"
+      ]
+    }
+  }
+
+  statement {
+    sid = "AWSCloudTrailWrite"
+    actions = [
+      "s3:PutObject*"
+    ]
+
+    resources = [
+      "arn:aws:s3:::kr.sideeffect.logs/cloudtrail/*"
+    ]
+
+    principals = {
+      type = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    condition {
+      test = "StringEquals"
+      variable = "s3:x-amz-acl"
+      values = ["bucket-owner-full-control"]
+    }
+  }
+
+  statement {
+    sid = "AWSCloudTrailAclCheck"
+    actions = [
+      "s3:GetBucketAcl"
+    ]
+
+    resources = [
+      "arn:aws:s3:::kr.sideeffect.logs"
+    ]
+
+    principals = {
+      type = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+  }
 }
 
 resource "aws_s3_bucket" "labs_sideeffect_kr" {
