@@ -77,6 +77,27 @@ resource "aws_iam_policy_attachment" "ecs_service_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
 }
 
+## a role for AWS config
+resource "aws_iam_role" "config_service" {
+  name = "config-service"
+  path = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.config_service.json}"
+}
+data "aws_iam_policy_document" "config_service" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
+
+    principals = {
+      type = "Service"
+      identifiers = [
+        "config.amazonaws.com"
+      ]
+    }
+  }
+}
+
 # policy
 resource "aws_iam_policy" "apex-default" {
   name = "apex-default"
@@ -152,10 +173,54 @@ data "aws_iam_policy_document" "nodejs-ko-twitter_lambda_logs" {
   }
 }
 
+resource "aws_iam_policy" "config_service_delivery_permission" {
+  name = "config-service-delivery-permission"
+  path = "/"
+  description = "Allow AWS Config to delivery logs"
+  policy = "${data.aws_iam_policy_document.config_service_delivery_permission.json}"
+}
+data "aws_iam_policy_document" "config_service_delivery_permission" {
+  statement {
+    actions = [
+      "s3:PutObject*"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.logs.arn}/config/*"
+    ]
+
+    condition {
+      test = "StringLike"
+      variable = "s3:x-amz-acl"
+      values = ["bucket-owner-full-control"]
+    }
+  }
+
+  statement {
+    actions = [
+      "s3:GetBucketAcl"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.logs.arn}"
+    ]
+  }
+
+  statement {
+    actions = [
+      "sns:Publish"
+    ]
+
+    resources = [
+      "${data.terraform_remote_state.vpc.sns_topic_config_service_arn}"
+    ]
+  }
+}
+
 # policy attachment
 resource "aws_iam_policy_attachment" "apex-default-policy-attachment" {
   name = "apex-default-policy-attachment"
-  policy_arn = "arn:aws:iam::410655858509:policy/apex-default"
+  policy_arn = "${aws_iam_policy.apex-default.arn}"
   groups = ["${aws_iam_group.apex.name}"]
   users = []
   roles = []
@@ -163,7 +228,7 @@ resource "aws_iam_policy_attachment" "apex-default-policy-attachment" {
 
 resource "aws_iam_policy_attachment" "nodejs-ko-twitter_lambda_logs-policy-attachment" {
   name = "nodejs-ko-twitter_lambda_logs-policy-attachment"
-  policy_arn = "arn:aws:iam::410655858509:policy/nodejs-ko-twitter_lambda_logs"
+  policy_arn = "${aws_iam_policy.nodejs-ko-twitter_lambda_logs.arn}"
   groups = []
   users = []
   roles = ["${aws_iam_role.nodejs-ko-twitter_lambda_function.name}"]
@@ -199,6 +264,22 @@ resource "aws_iam_policy_attachment" "AdministratorAccess-policy-attachment" {
   groups = []
   users = ["${aws_iam_user.outsider.name}"]
   roles = []
+}
+
+resource "aws_iam_policy_attachment" "AWSConfigRole-policy-attachment" {
+  name = "AWSConfigRole-policy-attachment"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
+  groups = []
+  users = []
+  roles = ["${aws_iam_role.config_service.name}"]
+}
+
+resource "aws_iam_policy_attachment" "config_service_delivery_permission_attachment" {
+  name = "config-service-delivery-permission-attachment"
+  policy_arn = "${aws_iam_policy.config_service_delivery_permission.arn}"
+  groups = []
+  users = []
+  roles = ["${aws_iam_role.config_service.name}"]
 }
 
 # group
