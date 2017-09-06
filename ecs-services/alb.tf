@@ -107,3 +107,18 @@ resource "aws_alb_listener_rule" "well_known_https" {
     values = ["/.well-known/*"]
   }
 }
+
+resource "aws_alb_listener_rule" "vault_https" {
+  listener_arn = "${aws_alb_listener.side_effect_https.arn}"
+  priority = 300
+
+  action {
+    type = "forward"
+    target_group_arn = "${aws_alb_target_group.vault.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["vault.sideeffect.kr"]
+  }
+}

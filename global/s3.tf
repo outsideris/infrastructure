@@ -129,3 +129,8 @@ data "aws_iam_policy_document" "nodejs_sideeffect_kr" {
     }
   }
 }
+
+resource "aws_s3_bucket" "vault_sideeffect_kr" {
+  bucket = "kr.sideeffect.vault"
+  acl = "private"
+}
