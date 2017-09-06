@@ -1,6 +1,7 @@
 resource "aws_ecs_task_definition" "vault" {
   family = "vault"
   container_definitions = "${file("task-definitions/vault.json")}"
+  task_role_arn = "${data.terraform_remote_state.global.iam_role_vault_ecs_task_role_arn}"
 }
 
 resource "aws_ecs_service" "vault" {

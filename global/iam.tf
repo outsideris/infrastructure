@@ -71,6 +71,7 @@ data "aws_iam_policy_document" "ecs_service_role" {
     }
   }
 }
+
 resource "aws_iam_policy_attachment" "ecs_service_role" {
   name = "AmazonEC2ContainerServiceforEC2Role"
   roles = ["${aws_iam_role.ecs_service_role.id}"]
@@ -94,6 +95,25 @@ data "aws_iam_policy_document" "config_service" {
       identifiers = [
         "config.amazonaws.com"
       ]
+    }
+  }
+}
+
+## a role for vault ecs task
+resource "aws_iam_role" "vault_ecs_task" {
+  name = "vault-ecs-task"
+  path = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.vault_ecs_task.json}"
+}
+data "aws_iam_policy_document" "vault_ecs_task" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
+
+    principals = {
+      type = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
 }
@@ -217,6 +237,25 @@ data "aws_iam_policy_document" "config_service_delivery_permission" {
   }
 }
 
+resource "aws_iam_policy" "vault" {
+  name = "vault-to-write-s3"
+  path = "/"
+  description = "Allow Vault to write secrets on S3"
+  policy = "${data.aws_iam_policy_document.vault.json}"
+}
+data "aws_iam_policy_document" "vault" {
+  statement {
+    actions = [
+      "s3:*"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.vault_sideeffect_kr.arn}",
+      "${aws_s3_bucket.vault_sideeffect_kr.arn}/*"
+    ]
+  }
+}
+
 # policy attachment
 resource "aws_iam_policy_attachment" "apex-default-policy-attachment" {
   name = "apex-default-policy-attachment"
@@ -292,6 +331,14 @@ resource "aws_iam_group_membership" "apex" {
   name = "apex-group-membership"
   users = ["${aws_iam_user.apex-basic.name}"]
   group = "${aws_iam_group.apex.name}"
+}
+
+resource "aws_iam_policy_attachment" "vault-policy-attachment" {
+  name = "vault-policy-attachment"
+  policy_arn = "${aws_iam_policy.vault.arn}"
+  groups = []
+  users = []
+  roles = ["${aws_iam_role.vault_ecs_task.name}"]
 }
 
 # instance profiles
