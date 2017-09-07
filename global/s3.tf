@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "terraform-state" {
   }
   logging {
     target_bucket = "${aws_s3_bucket.logs.id}"
-    target_prefix = "log/"
+    target_prefix = "terraform-state/"
   }
   lifecycle {
     prevent_destroy = true
