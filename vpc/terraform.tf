@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.9.4"
+  required_version = ">= 0.10.5"
   backend "s3" {
     bucket = "kr.sideeffect.terraform.state"
     key = "vpc/terraform.tfstate"
