@@ -14,86 +14,92 @@ resource "aws_iam_user" "outsider" {
 
 # roles
 resource "aws_iam_role" "nodejs-ko-twitter_lambda_function" {
-  name = "nodejs-ko-twitter_lambda_function"
-  path = "/"
+  name               = "nodejs-ko-twitter_lambda_function"
+  path               = "/"
   assume_role_policy = "${data.aws_iam_policy_document.nodejs-ko-twitter_lambda_function.json}"
 }
+
 data "aws_iam_policy_document" "nodejs-ko-twitter_lambda_function" {
   statement {
     actions = [
-      "sts:AssumeRole"
+      "sts:AssumeRole",
     ]
 
     principals = {
-      type = "Service"
+      type        = "Service"
       identifiers = ["lambda.amazonaws.com"]
     }
   }
 }
 
 resource "aws_iam_role" "ecs_instance_role" {
-  name = "ecsInstanceRole"
-  path = "/"
+  name               = "ecsInstanceRole"
+  path               = "/"
   assume_role_policy = "${data.aws_iam_policy_document.ecs_instance_role.json}"
 }
+
 data "aws_iam_policy_document" "ecs_instance_role" {
   statement {
     actions = [
-      "sts:AssumeRole"
+      "sts:AssumeRole",
     ]
 
     principals = {
-      type = "Service"
+      type        = "Service"
       identifiers = ["ec2.amazonaws.com"]
     }
   }
 }
+
 resource "aws_iam_policy_attachment" "ecs_instance_role" {
-  name = "AmazonEC2ContainerServiceforEC2Role"
-  roles = ["${aws_iam_role.ecs_instance_role.id}"]
+  name       = "AmazonEC2ContainerServiceforEC2Role"
+  roles      = ["${aws_iam_role.ecs_instance_role.id}"]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
 resource "aws_iam_role" "ecs_service_role" {
-  name = "ecsServiceRole"
-  path = "/"
+  name               = "ecsServiceRole"
+  path               = "/"
   assume_role_policy = "${data.aws_iam_policy_document.ecs_service_role.json}"
 }
+
 data "aws_iam_policy_document" "ecs_service_role" {
   statement {
     actions = [
-      "sts:AssumeRole"
+      "sts:AssumeRole",
     ]
 
     principals = {
-      type = "Service"
+      type        = "Service"
       identifiers = ["ecs.amazonaws.com"]
     }
   }
 }
 
 resource "aws_iam_policy_attachment" "ecs_service_role" {
-  name = "AmazonEC2ContainerServiceforEC2Role"
-  roles = ["${aws_iam_role.ecs_service_role.id}"]
+  name       = "AmazonEC2ContainerServiceforEC2Role"
+  roles      = ["${aws_iam_role.ecs_service_role.id}"]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
 }
 
 ## a role for AWS config
 resource "aws_iam_role" "config_service" {
-  name = "config-service"
-  path = "/"
+  name               = "config-service"
+  path               = "/"
   assume_role_policy = "${data.aws_iam_policy_document.config_service.json}"
 }
+
 data "aws_iam_policy_document" "config_service" {
   statement {
     actions = [
-      "sts:AssumeRole"
+      "sts:AssumeRole",
     ]
 
     principals = {
       type = "Service"
+
       identifiers = [
-        "config.amazonaws.com"
+        "config.amazonaws.com",
       ]
     }
   }
@@ -101,18 +107,19 @@ data "aws_iam_policy_document" "config_service" {
 
 ## a role for vault ecs task
 resource "aws_iam_role" "vault_ecs_task" {
-  name = "vault-ecs-task"
-  path = "/"
+  name               = "vault-ecs-task"
+  path               = "/"
   assume_role_policy = "${data.aws_iam_policy_document.vault_ecs_task.json}"
 }
+
 data "aws_iam_policy_document" "vault_ecs_task" {
   statement {
     actions = [
-      "sts:AssumeRole"
+      "sts:AssumeRole",
     ]
 
     principals = {
-      type = "Service"
+      type        = "Service"
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
@@ -120,11 +127,12 @@ data "aws_iam_policy_document" "vault_ecs_task" {
 
 # policy
 resource "aws_iam_policy" "apex-default" {
-  name = "apex-default"
-  path = "/"
+  name        = "apex-default"
+  path        = "/"
   description = "apex default"
-  policy = "${data.aws_iam_policy_document.apex-default.json}"
+  policy      = "${data.aws_iam_policy_document.apex-default.json}"
 }
+
 data "aws_iam_policy_document" "apex-default" {
   statement {
     actions = [
@@ -166,159 +174,162 @@ data "aws_iam_policy_document" "apex-default" {
       "s3:*",
       "dynamodb:GetItem",
       "dynamodb:PutItem",
-      "dynamodb:DeleteItem"
+      "dynamodb:DeleteItem",
     ]
 
     resources = [
-      "*"
+      "*",
     ]
   }
 }
 
 resource "aws_iam_policy" "nodejs-ko-twitter_lambda_logs" {
-  name = "nodejs-ko-twitter_lambda_logs"
-  path = "/"
+  name        = "nodejs-ko-twitter_lambda_logs"
+  path        = "/"
   description = "Allow lambda_function to utilize CloudWatchLogs. Created by apex(1)."
-  policy = "${data.aws_iam_policy_document.nodejs-ko-twitter_lambda_logs.json}"
+  policy      = "${data.aws_iam_policy_document.nodejs-ko-twitter_lambda_logs.json}"
 }
+
 data "aws_iam_policy_document" "nodejs-ko-twitter_lambda_logs" {
   statement {
     actions = [
-      "logs:*"
+      "logs:*",
     ]
 
     resources = [
-      "*"
+      "*",
     ]
   }
 }
 
 resource "aws_iam_policy" "config_service_delivery_permission" {
-  name = "config-service-delivery-permission"
-  path = "/"
+  name        = "config-service-delivery-permission"
+  path        = "/"
   description = "Allow AWS Config to delivery logs"
-  policy = "${data.aws_iam_policy_document.config_service_delivery_permission.json}"
+  policy      = "${data.aws_iam_policy_document.config_service_delivery_permission.json}"
 }
+
 data "aws_iam_policy_document" "config_service_delivery_permission" {
   statement {
     actions = [
-      "s3:PutObject*"
+      "s3:PutObject*",
     ]
 
     resources = [
-      "${aws_s3_bucket.logs.arn}/config/*"
+      "${aws_s3_bucket.logs.arn}/config/*",
     ]
 
     condition {
-      test = "StringLike"
+      test     = "StringLike"
       variable = "s3:x-amz-acl"
-      values = ["bucket-owner-full-control"]
+      values   = ["bucket-owner-full-control"]
     }
   }
 
   statement {
     actions = [
-      "s3:GetBucketAcl"
+      "s3:GetBucketAcl",
     ]
 
     resources = [
-      "${aws_s3_bucket.logs.arn}"
+      "${aws_s3_bucket.logs.arn}",
     ]
   }
 
   statement {
     actions = [
-      "sns:Publish"
+      "sns:Publish",
     ]
 
     resources = [
-      "${data.terraform_remote_state.vpc.sns_topic_config_service_arn}"
+      "${data.terraform_remote_state.vpc.sns_topic_config_service_arn}",
     ]
   }
 }
 
 resource "aws_iam_policy" "vault" {
-  name = "vault-to-write-s3"
-  path = "/"
+  name        = "vault-to-write-s3"
+  path        = "/"
   description = "Allow Vault to write secrets on S3"
-  policy = "${data.aws_iam_policy_document.vault.json}"
+  policy      = "${data.aws_iam_policy_document.vault.json}"
 }
+
 data "aws_iam_policy_document" "vault" {
   statement {
     actions = [
-      "s3:*"
+      "s3:*",
     ]
 
     resources = [
       "${aws_s3_bucket.vault_sideeffect_kr.arn}",
-      "${aws_s3_bucket.vault_sideeffect_kr.arn}/*"
+      "${aws_s3_bucket.vault_sideeffect_kr.arn}/*",
     ]
   }
 }
 
 # policy attachment
 resource "aws_iam_policy_attachment" "apex-default-policy-attachment" {
-  name = "apex-default-policy-attachment"
+  name       = "apex-default-policy-attachment"
   policy_arn = "${aws_iam_policy.apex-default.arn}"
-  groups = ["${aws_iam_group.apex.name}"]
-  users = []
-  roles = []
+  groups     = ["${aws_iam_group.apex.name}"]
+  users      = []
+  roles      = []
 }
 
 resource "aws_iam_policy_attachment" "nodejs-ko-twitter_lambda_logs-policy-attachment" {
-  name = "nodejs-ko-twitter_lambda_logs-policy-attachment"
+  name       = "nodejs-ko-twitter_lambda_logs-policy-attachment"
   policy_arn = "${aws_iam_policy.nodejs-ko-twitter_lambda_logs.arn}"
-  groups = []
-  users = []
-  roles = ["${aws_iam_role.nodejs-ko-twitter_lambda_function.name}"]
+  groups     = []
+  users      = []
+  roles      = ["${aws_iam_role.nodejs-ko-twitter_lambda_function.name}"]
 }
 
 resource "aws_iam_policy_attachment" "AWSLambdaFullAccess-policy-attachment" {
-  name = "AWSLambdaFullAccess-policy-attachment"
+  name       = "AWSLambdaFullAccess-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
-  groups = []
-  users = ["${aws_iam_user.outsider.name}"]
-  roles = []
+  groups     = []
+  users      = ["${aws_iam_user.outsider.name}"]
+  roles      = []
 }
 
 resource "aws_iam_policy_attachment" "IAMFullAccess-policy-attachment" {
-  name = "IAMFullAccess-policy-attachment"
+  name       = "IAMFullAccess-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
-  groups = []
-  users = ["${aws_iam_user.outsider.name}"]
-  roles = []
+  groups     = []
+  users      = ["${aws_iam_user.outsider.name}"]
+  roles      = []
 }
 
 resource "aws_iam_policy_attachment" "AmazonS3FullAccess-policy-attachment" {
-  name = "AmazonS3FullAccess-policy-attachment"
+  name       = "AmazonS3FullAccess-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-  groups = []
-  users = ["${aws_iam_user.outsider.name}"]
-  roles = ["${aws_iam_role.nodejs-ko-twitter_lambda_function.name}"]
+  groups     = []
+  users      = ["${aws_iam_user.outsider.name}"]
+  roles      = ["${aws_iam_role.nodejs-ko-twitter_lambda_function.name}"]
 }
 
 resource "aws_iam_policy_attachment" "AdministratorAccess-policy-attachment" {
-  name = "AdministratorAccess-policy-attachment"
+  name       = "AdministratorAccess-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-  groups = []
-  users = ["${aws_iam_user.outsider.name}"]
-  roles = []
+  groups     = []
+  users      = ["${aws_iam_user.outsider.name}"]
+  roles      = []
 }
 
 resource "aws_iam_policy_attachment" "AWSConfigRole-policy-attachment" {
-  name = "AWSConfigRole-policy-attachment"
+  name       = "AWSConfigRole-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
-  groups = []
-  users = []
-  roles = ["${aws_iam_role.config_service.name}"]
+  groups     = []
+  users      = []
+  roles      = ["${aws_iam_role.config_service.name}"]
 }
 
 resource "aws_iam_policy_attachment" "config_service_delivery_permission_attachment" {
-  name = "config-service-delivery-permission-attachment"
+  name       = "config-service-delivery-permission-attachment"
   policy_arn = "${aws_iam_policy.config_service_delivery_permission.arn}"
-  groups = []
-  users = []
-  roles = ["${aws_iam_role.config_service.name}"]
+  groups     = []
+  users      = []
+  roles      = ["${aws_iam_role.config_service.name}"]
 }
 
 # group
@@ -328,17 +339,17 @@ resource "aws_iam_group" "apex" {
 }
 
 resource "aws_iam_group_membership" "apex" {
-  name = "apex-group-membership"
+  name  = "apex-group-membership"
   users = ["${aws_iam_user.apex-basic.name}"]
   group = "${aws_iam_group.apex.name}"
 }
 
 resource "aws_iam_policy_attachment" "vault-policy-attachment" {
-  name = "vault-policy-attachment"
+  name       = "vault-policy-attachment"
   policy_arn = "${aws_iam_policy.vault.arn}"
-  groups = []
-  users = []
-  roles = ["${aws_iam_role.vault_ecs_task.name}"]
+  groups     = []
+  users      = []
+  roles      = ["${aws_iam_role.vault_ecs_task.name}"]
 }
 
 # instance profiles

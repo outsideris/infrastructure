@@ -1,13 +1,15 @@
 resource "aws_alb" "side_effect" {
-  name = "side-effect"
+  name     = "side-effect"
   internal = false
+
   security_groups = [
     "${data.terraform_remote_state.vpc.side_effect_default_sg}",
     "${data.terraform_remote_state.vpc.side_effect_ephemeral_ports_sg}",
     "${data.terraform_remote_state.vpc.side_effect_public_web_sg}",
   ]
+
   subnets = [
-    "${data.terraform_remote_state.vpc.side_effect_public_subnets}"
+    "${data.terraform_remote_state.vpc.side_effect_public_subnets}",
   ]
 
   enable_deletion_protection = true
@@ -25,8 +27,8 @@ resource "aws_alb" "side_effect" {
 # http
 resource "aws_alb_listener" "side_effect_http" {
   load_balancer_arn = "${aws_alb.side_effect.arn}"
-  port = "80"
-  protocol = "HTTP"
+  port              = "80"
+  protocol          = "HTTP"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
@@ -36,10 +38,10 @@ resource "aws_alb_listener" "side_effect_http" {
 
 resource "aws_alb_listener_rule" "popular_convention_http" {
   listener_arn = "${aws_alb_listener.side_effect_http.arn}"
-  priority = 100
+  priority     = 100
 
   action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
   }
 
@@ -51,10 +53,10 @@ resource "aws_alb_listener_rule" "popular_convention_http" {
 
 resource "aws_alb_listener_rule" "well_known_http" {
   listener_arn = "${aws_alb_listener.side_effect_http.arn}"
-  priority = 200
+  priority     = 200
 
   action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = "${aws_alb_target_group.well_known.arn}"
   }
 
@@ -67,10 +69,10 @@ resource "aws_alb_listener_rule" "well_known_http" {
 # https
 resource "aws_alb_listener" "side_effect_https" {
   load_balancer_arn = "${aws_alb.side_effect.arn}"
-  port = "443"
-  protocol = "HTTPS"
-  ssl_policy = "ELBSecurityPolicy-2016-08"
-  certificate_arn = "${data.terraform_remote_state.global.sideeffect_kr_certificate_arn}"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "${data.terraform_remote_state.global.sideeffect_kr_certificate_arn}"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
@@ -80,10 +82,10 @@ resource "aws_alb_listener" "side_effect_https" {
 
 resource "aws_alb_listener_rule" "popular_convention_https" {
   listener_arn = "${aws_alb_listener.side_effect_https.arn}"
-  priority = 100
+  priority     = 100
 
   action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
   }
 
@@ -95,10 +97,10 @@ resource "aws_alb_listener_rule" "popular_convention_https" {
 
 resource "aws_alb_listener_rule" "well_known_https" {
   listener_arn = "${aws_alb_listener.side_effect_https.arn}"
-  priority = 200
+  priority     = 200
 
   action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = "${aws_alb_target_group.well_known.arn}"
   }
 
@@ -110,10 +112,10 @@ resource "aws_alb_listener_rule" "well_known_https" {
 
 resource "aws_alb_listener_rule" "vault_https" {
   listener_arn = "${aws_alb_listener.side_effect_https.arn}"
-  priority = 300
+  priority     = 300
 
   action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = "${aws_alb_target_group.vault.arn}"
   }
 

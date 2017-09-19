@@ -5,14 +5,14 @@ output "side_effect_id" {
 output "side_effect_public_subnets" {
   value = [
     "${aws_subnet.side_effect_public_subnet1.id}",
-    "${aws_subnet.side_effect_public_subnet2.id}"
+    "${aws_subnet.side_effect_public_subnet2.id}",
   ]
 }
 
 output "side_effect_private_subnets" {
   value = [
     "${aws_subnet.side_effect_private_subnet1.id}",
-    "${aws_subnet.side_effect_private_subnet2.id}"
+    "${aws_subnet.side_effect_private_subnet2.id}",
   ]
 }
 

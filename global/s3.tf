@@ -8,17 +8,21 @@ resource "aws_s3_bucket" "nodejs-ko" {
 resource "aws_s3_bucket" "terraform-state" {
   bucket = "kr.sideeffect.terraform.state"
   acl    = "private"
+
   versioning {
     enabled = true
   }
+
   tags {
     Name        = "terraform state"
     Environment = "Prod"
   }
+
   logging {
     target_bucket = "${aws_s3_bucket.logs.id}"
     target_prefix = "terraform-state/"
   }
+
   lifecycle {
     prevent_destroy = true
   }
@@ -30,59 +34,64 @@ resource "aws_s3_bucket" "logs" {
   acl    = "log-delivery-write"
   policy = "${data.aws_iam_policy_document.aws_s3_bucket_logs.json}"
 }
+
 data "aws_iam_policy_document" "aws_s3_bucket_logs" {
   statement {
     sid = "Stmt1498286757157"
+
     actions = [
-      "s3:PutObject"
+      "s3:PutObject",
     ]
 
     resources = [
-      "arn:aws:s3:::kr.sideeffect.logs/alb/AWSLogs/410655858509/*"
+      "arn:aws:s3:::kr.sideeffect.logs/alb/AWSLogs/410655858509/*",
     ]
 
     principals = {
       type = "AWS"
+
       identifiers = [
-        "${data.aws_elb_service_account.main.arn}"
+        "${data.aws_elb_service_account.main.arn}",
       ]
     }
   }
 
   statement {
     sid = "AWSCloudTrailWrite"
+
     actions = [
-      "s3:PutObject*"
+      "s3:PutObject*",
     ]
 
     resources = [
-      "arn:aws:s3:::kr.sideeffect.logs/cloudtrail/*"
+      "arn:aws:s3:::kr.sideeffect.logs/cloudtrail/*",
     ]
 
     principals = {
-      type = "Service"
+      type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
 
     condition {
-      test = "StringEquals"
+      test     = "StringEquals"
       variable = "s3:x-amz-acl"
-      values = ["bucket-owner-full-control"]
+      values   = ["bucket-owner-full-control"]
     }
   }
 
   statement {
     sid = "AWSCloudTrailAclCheck"
+
     actions = [
-      "s3:GetBucketAcl"
+      "s3:GetBucketAcl",
     ]
 
     resources = [
-      "arn:aws:s3:::kr.sideeffect.logs"
+      "arn:aws:s3:::kr.sideeffect.logs",
     ]
 
     principals = {
-      type = "Service"
+      type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
   }
@@ -90,20 +99,21 @@ data "aws_iam_policy_document" "aws_s3_bucket_logs" {
 
 resource "aws_s3_bucket" "labs_sideeffect_kr" {
   bucket = "kr.sideeffect.labs"
-  acl = "private"
+  acl    = "private"
   policy = "${data.aws_iam_policy_document.labs_sideeffect_kr.json}"
 
   website {
     index_document = "index.html"
   }
 }
+
 data "aws_iam_policy_document" "labs_sideeffect_kr" {
   statement {
-    actions = ["s3:GetObject"]
+    actions   = ["s3:GetObject"]
     resources = ["arn:aws:s3:::kr.sideeffect.labs/*"]
 
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["${aws_cloudfront_origin_access_identity.labs_sideeffect_kr.iam_arn}"]
     }
   }
@@ -111,20 +121,21 @@ data "aws_iam_policy_document" "labs_sideeffect_kr" {
 
 resource "aws_s3_bucket" "nodejs_sideeffect_kr" {
   bucket = "kr.sideeffect.nodejs"
-  acl = "private"
+  acl    = "private"
   policy = "${data.aws_iam_policy_document.nodejs_sideeffect_kr.json}"
 
   website {
     index_document = "index.html"
   }
 }
+
 data "aws_iam_policy_document" "nodejs_sideeffect_kr" {
   statement {
-    actions = ["s3:GetObject"]
+    actions   = ["s3:GetObject"]
     resources = ["arn:aws:s3:::kr.sideeffect.nodejs/*"]
 
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["${aws_cloudfront_origin_access_identity.nodejs_sideeffect_kr.iam_arn}"]
     }
   }
@@ -132,10 +143,12 @@ data "aws_iam_policy_document" "nodejs_sideeffect_kr" {
 
 resource "aws_s3_bucket" "vault_sideeffect_kr" {
   bucket = "kr.sideeffect.vault"
-  acl = "private"
+  acl    = "private"
+
   versioning = {
     enabled = true
   }
+
   logging {
     target_bucket = "${aws_s3_bucket.logs.id}"
     target_prefix = "vault/"
