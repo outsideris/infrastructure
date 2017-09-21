@@ -1,7 +1,7 @@
 output "side_effect_alb_dns" {
-  value = "${aws_alb.side_effect.dns_name}"
+  value = "${module.side_effect_alb.dns}"
 }
 
 output "side_effect_alb_zone_id" {
-  value = "${aws_alb.side_effect.zone_id}"
+  value = "${module.side_effect_alb.zone_id}"
 }

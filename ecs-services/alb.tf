@@ -1,6 +1,10 @@
-resource "aws_alb" "side_effect" {
-  name     = "side-effect"
-  internal = false
+module "side_effect_alb" {
+  source = "./modules/alb"
+  name   = "side-effect"
+
+  subnet_ids = [
+    "${data.terraform_remote_state.vpc.side_effect_public_subnets}",
+  ]
 
   security_groups = [
     "${data.terraform_remote_state.vpc.side_effect_default_sg}",
@@ -8,25 +12,13 @@ resource "aws_alb" "side_effect" {
     "${data.terraform_remote_state.vpc.side_effect_public_web_sg}",
   ]
 
-  subnets = [
-    "${data.terraform_remote_state.vpc.side_effect_public_subnets}",
-  ]
-
-  enable_deletion_protection = true
-
-  access_logs {
-    bucket = "${data.terraform_remote_state.global.s3_bucket_logs_bucket}"
-    prefix = "alb"
-  }
-
-  tags {
-    Environment = "production"
-  }
+  log_bucket  = "${data.terraform_remote_state.global.s3_bucket_logs_bucket}"
+  environment = "production"
 }
 
 # http
 resource "aws_alb_listener" "side_effect_http" {
-  load_balancer_arn = "${aws_alb.side_effect.arn}"
+  load_balancer_arn = "${module.side_effect_alb.arn}"
   port              = "80"
   protocol          = "HTTP"
 
@@ -68,7 +60,7 @@ resource "aws_alb_listener_rule" "well_known_http" {
 
 # https
 resource "aws_alb_listener" "side_effect_https" {
-  load_balancer_arn = "${aws_alb.side_effect.arn}"
+  load_balancer_arn = "${module.side_effect_alb.arn}"
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
