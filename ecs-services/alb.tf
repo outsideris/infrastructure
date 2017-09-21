@@ -17,19 +17,16 @@ module "side_effect_alb" {
 }
 
 # http
-resource "aws_alb_listener" "side_effect_http" {
-  load_balancer_arn = "${module.side_effect_alb.arn}"
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
-    type             = "forward"
-  }
+module "side_effect_alb_http" {
+  source           = "./modules/alb-listener"
+  alb_arn          = "${module.side_effect_alb.arn}"
+  port             = "80"
+  protocol         = "HTTP"
+  target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
 }
 
 resource "aws_alb_listener_rule" "popular_convention_http" {
-  listener_arn = "${aws_alb_listener.side_effect_http.arn}"
+  listener_arn = "${module.side_effect_alb_http.arn}"
   priority     = 100
 
   action {
@@ -44,7 +41,7 @@ resource "aws_alb_listener_rule" "popular_convention_http" {
 }
 
 resource "aws_alb_listener_rule" "well_known_http" {
-  listener_arn = "${aws_alb_listener.side_effect_http.arn}"
+  listener_arn = "${module.side_effect_alb_http.arn}"
   priority     = 200
 
   action {
@@ -59,21 +56,17 @@ resource "aws_alb_listener_rule" "well_known_http" {
 }
 
 # https
-resource "aws_alb_listener" "side_effect_https" {
-  load_balancer_arn = "${module.side_effect_alb.arn}"
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "${data.terraform_remote_state.global.sideeffect_kr_certificate_arn}"
-
-  default_action {
-    target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
-    type             = "forward"
-  }
+module "side_effect_alb_https" {
+  source           = "./modules/alb-listener"
+  alb_arn          = "${module.side_effect_alb.arn}"
+  port             = "443"
+  protocol         = "HTTPS"
+  certificate_arn  = "${data.terraform_remote_state.global.sideeffect_kr_certificate_arn}"
+  target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
 }
 
 resource "aws_alb_listener_rule" "popular_convention_https" {
-  listener_arn = "${aws_alb_listener.side_effect_https.arn}"
+  listener_arn = "${module.side_effect_alb_https.arn}"
   priority     = 100
 
   action {
@@ -88,7 +81,7 @@ resource "aws_alb_listener_rule" "popular_convention_https" {
 }
 
 resource "aws_alb_listener_rule" "well_known_https" {
-  listener_arn = "${aws_alb_listener.side_effect_https.arn}"
+  listener_arn = "${module.side_effect_alb_https.arn}"
   priority     = 200
 
   action {
@@ -103,7 +96,7 @@ resource "aws_alb_listener_rule" "well_known_https" {
 }
 
 resource "aws_alb_listener_rule" "vault_https" {
-  listener_arn = "${aws_alb_listener.side_effect_https.arn}"
+  listener_arn = "${module.side_effect_alb_https.arn}"
   priority     = 300
 
   action {
