@@ -25,34 +25,22 @@ module "side_effect_alb_http" {
   target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
 }
 
-resource "aws_alb_listener_rule" "popular_convention_http" {
-  listener_arn = "${module.side_effect_alb_http.arn}"
-  priority     = 100
-
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
-  }
-
-  condition {
-    field  = "path-pattern"
-    values = ["/popularconvention/*"]
-  }
+module "side_effect_alb_http_rule_popular_convention" {
+  source           = "./modules/alb-listener-rule"
+  listener_arn     = "${module.side_effect_alb_http.arn}"
+  priority         = 100
+  target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
+  condition_field  = "path-pattern"
+  condition_values = ["/popularconvention/*"]
 }
 
-resource "aws_alb_listener_rule" "well_known_http" {
-  listener_arn = "${module.side_effect_alb_http.arn}"
-  priority     = 200
-
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_alb_target_group.well_known.arn}"
-  }
-
-  condition {
-    field  = "path-pattern"
-    values = ["/.well-known/*"]
-  }
+module "side_effect_alb_http_rule_well_known" {
+  source           = "./modules/alb-listener-rule"
+  listener_arn     = "${module.side_effect_alb_http.arn}"
+  priority         = 200
+  target_group_arn = "${aws_alb_target_group.well_known.arn}"
+  condition_field  = "path-pattern"
+  condition_values = ["/.well-known/*"]
 }
 
 # https
@@ -65,47 +53,29 @@ module "side_effect_alb_https" {
   target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
 }
 
-resource "aws_alb_listener_rule" "popular_convention_https" {
-  listener_arn = "${module.side_effect_alb_https.arn}"
-  priority     = 100
-
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
-  }
-
-  condition {
-    field  = "path-pattern"
-    values = ["/popularconvention/*"]
-  }
+module "side_effect_alb_https_rule_popular_convention" {
+  source           = "./modules/alb-listener-rule"
+  listener_arn     = "${module.side_effect_alb_https.arn}"
+  priority         = 100
+  target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
+  condition_field  = "path-pattern"
+  condition_values = ["/popularconvention/*"]
 }
 
-resource "aws_alb_listener_rule" "well_known_https" {
-  listener_arn = "${module.side_effect_alb_https.arn}"
-  priority     = 200
-
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_alb_target_group.well_known.arn}"
-  }
-
-  condition {
-    field  = "path-pattern"
-    values = ["/.well-known/*"]
-  }
+module "side_effect_alb_https_rule_well_known" {
+  source           = "./modules/alb-listener-rule"
+  listener_arn     = "${module.side_effect_alb_https.arn}"
+  priority         = 200
+  target_group_arn = "${aws_alb_target_group.well_known.arn}"
+  condition_field  = "path-pattern"
+  condition_values = ["/.well-known/*"]
 }
 
-resource "aws_alb_listener_rule" "vault_https" {
-  listener_arn = "${module.side_effect_alb_https.arn}"
-  priority     = 300
-
-  action {
-    type             = "forward"
-    target_group_arn = "${aws_alb_target_group.vault.arn}"
-  }
-
-  condition {
-    field  = "host-header"
-    values = ["vault.sideeffect.kr"]
-  }
+module "side_effect_alb_https_rule_vault" {
+  source           = "./modules/alb-listener-rule"
+  listener_arn     = "${module.side_effect_alb_https.arn}"
+  priority         = 300
+  target_group_arn = "${aws_alb_target_group.vault.arn}"
+  condition_field  = "host-header"
+  condition_values = ["vault.sideeffect.kr"]
 }

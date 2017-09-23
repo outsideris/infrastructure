@@ -12,7 +12,7 @@ variable "protocol" {
 
 variable "certificate_arn" {
   description = "The certificate ARN to use in the ALB. It's only for https protocol."
-  default = ""
+  default     = ""
 }
 
 variable "target_group_arn" {
