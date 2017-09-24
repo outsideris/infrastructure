@@ -22,14 +22,14 @@ module "side_effect_alb_http" {
   alb_arn          = "${module.side_effect_alb.arn}"
   port             = "80"
   protocol         = "HTTP"
-  target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
+  target_group_arn = "${module.ecs_service_popular_convention.target_group_arn}"
 }
 
 module "side_effect_alb_http_rule_popular_convention" {
   source           = "./modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_http.arn}"
   priority         = 100
-  target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
+  target_group_arn = "${module.ecs_service_popular_convention.target_group_arn}"
   condition_field  = "path-pattern"
   condition_values = ["/popularconvention/*"]
 }
@@ -38,7 +38,7 @@ module "side_effect_alb_http_rule_well_known" {
   source           = "./modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_http.arn}"
   priority         = 200
-  target_group_arn = "${aws_alb_target_group.well_known.arn}"
+  target_group_arn = "${module.ecs_service_well_known.target_group_arn}"
   condition_field  = "path-pattern"
   condition_values = ["/.well-known/*"]
 }
@@ -50,14 +50,14 @@ module "side_effect_alb_https" {
   port             = "443"
   protocol         = "HTTPS"
   certificate_arn  = "${data.terraform_remote_state.global.sideeffect_kr_certificate_arn}"
-  target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
+  target_group_arn = "${module.ecs_service_popular_convention.target_group_arn}"
 }
 
 module "side_effect_alb_https_rule_popular_convention" {
   source           = "./modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_https.arn}"
   priority         = 100
-  target_group_arn = "${aws_alb_target_group.popular_convention.arn}"
+  target_group_arn = "${module.ecs_service_popular_convention.target_group_arn}"
   condition_field  = "path-pattern"
   condition_values = ["/popularconvention/*"]
 }
@@ -66,7 +66,7 @@ module "side_effect_alb_https_rule_well_known" {
   source           = "./modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_https.arn}"
   priority         = 200
-  target_group_arn = "${aws_alb_target_group.well_known.arn}"
+  target_group_arn = "${module.ecs_service_well_known.target_group_arn}"
   condition_field  = "path-pattern"
   condition_values = ["/.well-known/*"]
 }
@@ -75,7 +75,7 @@ module "side_effect_alb_https_rule_vault" {
   source           = "./modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_https.arn}"
   priority         = 300
-  target_group_arn = "${aws_alb_target_group.vault.arn}"
+  target_group_arn = "${module.ecs_service_vault.target_group_arn}"
   condition_field  = "host-header"
   condition_values = ["vault.sideeffect.kr"]
 }
