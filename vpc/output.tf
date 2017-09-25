@@ -1,35 +1,29 @@
 output "side_effect_id" {
-  value = "${aws_vpc.side_effect.id}"
+  value = "${module.side_effect_vpc.id}"
 }
 
 output "side_effect_public_subnets" {
-  value = [
-    "${aws_subnet.side_effect_public_subnet1.id}",
-    "${aws_subnet.side_effect_public_subnet2.id}",
-  ]
+  value = ["${module.side_effect_vpc.public_subnets}"]
 }
 
 output "side_effect_private_subnets" {
-  value = [
-    "${aws_subnet.side_effect_private_subnet1.id}",
-    "${aws_subnet.side_effect_private_subnet2.id}",
-  ]
+  value = ["${module.side_effect_vpc.private_subnets}"]
 }
 
 output "side_effect_default_sg" {
-  value = "${aws_default_security_group.side_effect_default.id}"
+  value = "${module.side_effect_vpc.security_group_default}"
 }
 
 output "side_effect_ephemeral_ports_sg" {
-  value = "${aws_security_group.sideeffect_ephemeral_ports.id}"
+  value = "${module.side_effect_vpc.security_group_ephemeral_ports}"
 }
 
 output "side_effect_bastion_sg" {
-  value = "${aws_security_group.side_effect_bastion.id}"
+  value = "${module.side_effect_vpc.security_group_bastion}"
 }
 
 output "side_effect_public_web_sg" {
-  value = "${aws_security_group.side_effect_public_web.id}"
+  value = "${module.side_effect_vpc.security_group_public_web}"
 }
 
 output "ecs_side_effect_id" {

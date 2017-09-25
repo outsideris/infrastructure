@@ -11,8 +11,8 @@ resource "aws_launch_configuration" "sideeffect" {
   key_name             = "${var.keypair}"
 
   security_groups = [
-    "${aws_default_security_group.side_effect_default.id}",
-    "${aws_security_group.sideeffect_ephemeral_ports.id}",
+    "${module.side_effect_vpc.security_group_default}",
+    "${module.side_effect_vpc.security_group_ephemeral_ports}",
   ]
 
   user_data     = "#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.sideeffect.name} > /etc/ecs/ecs.config"
@@ -31,13 +31,10 @@ resource "aws_launch_configuration" "sideeffect" {
 
 resource "aws_autoscaling_group" "sideeffect" {
   name                 = "sideeffect"
-  availability_zones   = ["${data.aws_availability_zones.available.names}"]
+  availability_zones   = ["${module.side_effect_vpc.availability_zones}"]
   launch_configuration = "${aws_launch_configuration.sideeffect.name}"
 
-  vpc_zone_identifier = [
-    "${aws_subnet.side_effect_private_subnet1.id}",
-    "${aws_subnet.side_effect_private_subnet2.id}",
-  ]
+  vpc_zone_identifier = ["${module.side_effect_vpc.private_subnets}"]
 
   min_size         = 1
   max_size         = 4
