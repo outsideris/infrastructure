@@ -27,7 +27,7 @@ output "side_effect_public_web_sg" {
 }
 
 output "ecs_side_effect_id" {
-  value = "${aws_ecs_cluster.sideeffect.id}"
+  value = "${module.side_effect_ecs_cluster.id}"
 }
 
 output "sns_topic_config_service_arn" {
