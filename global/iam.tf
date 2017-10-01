@@ -2,14 +2,16 @@
 
 ## for apex
 resource "aws_iam_user" "apex-basic" {
-  name = "apex-basic"
-  path = "/"
+  name          = "apex-basic"
+  path          = "/"
+  force_destroy = true
 }
 
 ## it's me
 resource "aws_iam_user" "outsider" {
-  name = "outsider"
-  path = "/"
+  name          = "outsider"
+  path          = "/"
+  force_destroy = true
 }
 
 # roles
