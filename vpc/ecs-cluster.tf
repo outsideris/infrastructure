@@ -14,5 +14,7 @@ module "side_effect_ecs_cluster" {
   cluster_min_size         = 1
   cluster_max_size         = 4
   cluster_desired_capacity = 3
+  instance_type            = "t2.micro"
   environment              = "production"
 }
+

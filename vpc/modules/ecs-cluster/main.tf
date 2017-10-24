@@ -6,7 +6,7 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_launch_configuration" "main" {
   name_prefix          = "${var.name}-"
   image_id             = "ami-3a000e5d"    // amzn-ami-2017.03.b-amazon-ecs-optimized
-  instance_type        = "t2.micro"
+  instance_type        = "${var.instance_type}"
   iam_instance_profile = "ecsInstanceRole"
   key_name             = "${var.keypair}"
 

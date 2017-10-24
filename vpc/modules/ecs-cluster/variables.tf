@@ -34,6 +34,10 @@ variable "cluster_desired_capacity" {
   description = "The desired capacity for instance of the cluster."
 }
 
+variable "instance_type" {
+  description = "The instance type of the cluster."
+}
+
 variable "environment" {
   description = "Environment tag, e.g prod"
 }
