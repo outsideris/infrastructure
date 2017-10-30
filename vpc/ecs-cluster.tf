@@ -18,3 +18,22 @@ module "side_effect_ecs_cluster" {
   environment              = "production"
 }
 
+# pinkfong test ecs cluster
+module "pinkfong_ecs_cluster" {
+  source  = "./modules/ecs-cluster"
+  name    = "pinkfong"
+  keypair = "${var.keypair}"
+
+  security_groups = [
+    "${module.side_effect_vpc.security_group_default}",
+    "${module.side_effect_vpc.security_group_ephemeral_ports}",
+  ]
+
+  availability_zones       = ["${module.side_effect_vpc.availability_zones}"]
+  subnets                  = ["${module.side_effect_vpc.private_subnets}"]
+  cluster_min_size         = 1
+  cluster_max_size         = 4
+  cluster_desired_capacity = 3
+  instance_type            = "m4.large"
+  environment              = "production"
+}
