@@ -42,3 +42,14 @@ module "ecs_service_pinkfong6" {
   vpc_id            = "${data.terraform_remote_state.vpc.side_effect_id}"
   health_check_path = "/account/health"
 }
+
+module "ecs_service_pinkfong8" {
+  source        = "./modules/ecs-service"
+  name          = "pinkfong8"
+  cluster_id    = "${data.terraform_remote_state.vpc.ecs_pinkfong_id}"
+  desired_count = 1
+
+  container_port    = 8000
+  vpc_id            = "${data.terraform_remote_state.vpc.side_effect_id}"
+  health_check_path = "/account/health"
+}
