@@ -6,7 +6,7 @@ resource "aws_alb" "main" {
   security_groups = ["${var.security_groups}"]
   subnets         = ["${var.subnet_ids}"]
 
-  enable_deletion_protection = true
+  enable_deletion_protection = false
 
   access_logs {
     bucket = "${var.log_bucket}"
