@@ -30,10 +30,6 @@ output "ecs_side_effect_id" {
   value = "${module.side_effect_ecs_cluster.id}"
 }
 
-output "ecs_pinkfong_id" {
-  value = "${module.pinkfong_ecs_cluster.id}"
-}
-
 output "sns_topic_config_service_arn" {
   value = "${aws_sns_topic.config_service.arn}"
 }
