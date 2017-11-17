@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     bucket     = "kr.sideeffect.terraform.state"
-    key        = "vpc/terraform.tfstate"
+    key        = "ap-northeast-1/vpc/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
     lock_table = "SideEffectTerraformStateLock"
