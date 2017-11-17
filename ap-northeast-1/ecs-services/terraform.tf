@@ -6,7 +6,7 @@ terraform {
     key        = "ap-northeast-1/ecs-services/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
-    lock_table = "SideEffectTerraformStateLock"
+    dynamodb_table = "SideEffectTerraformStateLock"
     acl        = "bucket-owner-full-control"
   }
 }
