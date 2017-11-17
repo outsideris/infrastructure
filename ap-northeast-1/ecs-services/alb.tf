@@ -1,5 +1,5 @@
 module "side_effect_alb" {
-  source = "./modules/alb"
+  source = "../modules/alb"
   name   = "side-effect"
 
   subnet_ids = [
@@ -18,7 +18,7 @@ module "side_effect_alb" {
 
 # http
 module "side_effect_alb_http" {
-  source           = "./modules/alb-listener"
+  source           = "../modules/alb-listener"
   alb_arn          = "${module.side_effect_alb.arn}"
   port             = "80"
   protocol         = "HTTP"
@@ -26,7 +26,7 @@ module "side_effect_alb_http" {
 }
 
 module "side_effect_alb_http_rule_popular_convention" {
-  source           = "./modules/alb-listener-rule"
+  source           = "../modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_http.arn}"
   priority         = 100
   target_group_arn = "${module.ecs_service_popular_convention.target_group_arn}"
@@ -35,7 +35,7 @@ module "side_effect_alb_http_rule_popular_convention" {
 }
 
 module "side_effect_alb_http_rule_well_known" {
-  source           = "./modules/alb-listener-rule"
+  source           = "../modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_http.arn}"
   priority         = 200
   target_group_arn = "${module.ecs_service_well_known.target_group_arn}"
@@ -45,7 +45,7 @@ module "side_effect_alb_http_rule_well_known" {
 
 # https
 module "side_effect_alb_https" {
-  source           = "./modules/alb-listener"
+  source           = "../modules/alb-listener"
   alb_arn          = "${module.side_effect_alb.arn}"
   port             = "443"
   protocol         = "HTTPS"
@@ -54,7 +54,7 @@ module "side_effect_alb_https" {
 }
 
 module "side_effect_alb_https_rule_popular_convention" {
-  source           = "./modules/alb-listener-rule"
+  source           = "../modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_https.arn}"
   priority         = 100
   target_group_arn = "${module.ecs_service_popular_convention.target_group_arn}"
@@ -63,7 +63,7 @@ module "side_effect_alb_https_rule_popular_convention" {
 }
 
 module "side_effect_alb_https_rule_well_known" {
-  source           = "./modules/alb-listener-rule"
+  source           = "../modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_https.arn}"
   priority         = 200
   target_group_arn = "${module.ecs_service_well_known.target_group_arn}"
@@ -72,7 +72,7 @@ module "side_effect_alb_https_rule_well_known" {
 }
 
 module "side_effect_alb_https_rule_vault" {
-  source           = "./modules/alb-listener-rule"
+  source           = "../modules/alb-listener-rule"
   listener_arn     = "${module.side_effect_alb_https.arn}"
   priority         = 300
   target_group_arn = "${module.ecs_service_vault.target_group_arn}"

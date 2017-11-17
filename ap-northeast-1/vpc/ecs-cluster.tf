@@ -1,6 +1,6 @@
 # sideeffect ecs cluster
 module "side_effect_ecs_cluster" {
-  source  = "./modules/ecs-cluster"
+  source  = "../modules/ecs-cluster"
   name    = "sideeffect"
   keypair = "${var.keypair}"
 

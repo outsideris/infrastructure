@@ -1,6 +1,6 @@
 # side-effect VPC for my personal projects
 module "side_effect_vpc" {
-  source          = "./modules/vpc"
+  source          = "../modules/vpc"
   name            = "sideeffect"
   cidr            = "10.10.0.0/16"
   environment     = "production"
