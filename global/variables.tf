@@ -4,10 +4,10 @@ data "terraform_remote_state" "vpc" {
 
   config {
     bucket     = "kr.sideeffect.terraform.state"
-    key        = "vpc/terraform.tfstate"
+    key        = "ap-northeast-1/vpc/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
-    lock_table = "SideEffectTerraformStateLock"
+    dynamodb_table = "SideEffectTerraformStateLock"
     acl        = "bucket-owner-full-control"
   }
 }
@@ -18,10 +18,10 @@ data "terraform_remote_state" "ecs_services" {
 
   config {
     bucket     = "kr.sideeffect.terraform.state"
-    key        = "ecs-services/terraform.tfstate"
+    key        = "ap-northeast-1/ecs-services/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
-    lock_table = "SideEffectTerraformStateLock"
+    dynamodb_table = "SideEffectTerraformStateLock"
     acl        = "bucket-owner-full-control"
   }
 }
@@ -35,7 +35,7 @@ data "terraform_remote_state" "us_east_1" {
     key        = "us-east-1/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
-    lock_table = "SideEffectTerraformStateLock"
+    dynamodb_table = "SideEffectTerraformStateLock"
     acl        = "bucket-owner-full-control"
   }
 }

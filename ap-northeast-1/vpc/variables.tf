@@ -49,7 +49,7 @@ data "terraform_remote_state" "global" {
     key        = "global/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
-    lock_table = "SideEffectTerraformStateLock"
+    dynamodb_table = "SideEffectTerraformStateLock"
     acl        = "bucket-owner-full-control"
   }
 }

@@ -10,7 +10,7 @@ data "terraform_remote_state" "global" {
     key        = "global/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
-    lock_table = "SideEffectTerraformStateLock"
+    dynamodb_table = "SideEffectTerraformStateLock"
     acl        = "bucket-owner-full-control"
   }
 }
@@ -21,10 +21,10 @@ data "terraform_remote_state" "vpc" {
 
   config {
     bucket     = "kr.sideeffect.terraform.state"
-    key        = "vpc/terraform.tfstate"
+    key        = "ap-northeast-1/vpc/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
-    lock_table = "SideEffectTerraformStateLock"
+    dynamodb_table = "SideEffectTerraformStateLock"
     acl        = "bucket-owner-full-control"
   }
 }

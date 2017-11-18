@@ -3,6 +3,3 @@ provider "aws" {
   region  = "ap-northeast-1"
 }
 
-provider "terraform" {
-  version = "~> 1.0.0"
-}
