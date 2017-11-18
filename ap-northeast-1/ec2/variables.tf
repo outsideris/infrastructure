@@ -21,10 +21,15 @@ data "terraform_remote_state" "vpc" {
 
   config {
     bucket     = "kr.sideeffect.terraform.state"
-    key        = "vpc/terraform.tfstate"
+    key        = "ap-northeast-1/vpc/terraform.tfstate"
     region     = "ap-northeast-1"
     encrypt    = true
     lock_table = "SideEffectTerraformStateLock"
     acl        = "bucket-owner-full-control"
   }
+}
+
+// my key pair
+variable "keypair" {
+  default = "outsider-aws"
 }
