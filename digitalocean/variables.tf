@@ -1,0 +1,1 @@
+variable "digitalocean_token" {}
