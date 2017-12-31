@@ -89,19 +89,6 @@ resource "aws_route" "public" {
   gateway_id             = "${aws_internet_gateway.main.id}"
 }
 
-# eip for NAT
-resource "aws_eip" "nat" {
-  vpc        = true
-  depends_on = ["aws_internet_gateway.main"]
-}
-
-# NAT gateway
-resource "aws_nat_gateway" "main" {
-  allocation_id = "${aws_eip.nat.id}"
-  subnet_id     = "${element(aws_subnet.public.*.id, 0)}"
-  depends_on    = ["aws_internet_gateway.main"]
-}
-
 # private route table
 resource "aws_route_table" "private" {
   vpc_id = "${aws_vpc.main.id}"
@@ -111,12 +98,6 @@ resource "aws_route_table" "private" {
     Environment      = "${var.environment}"
     TerraformManaged = "true"
   }
-}
-
-resource "aws_route" "private" {
-  route_table_id         = "${aws_route_table.private.id}"
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = "${aws_nat_gateway.main.id}"
 }
 
 # associate subnets to route tables
@@ -321,17 +302,6 @@ resource "aws_network_acl_rule" "private_egress_vpc" {
   to_port        = 0
 }
 
-resource "aws_network_acl_rule" "private_ingress_nat" {
-  network_acl_id = "${aws_network_acl.private.id}"
-  rule_number    = 110
-  rule_action    = "allow"
-  egress         = false
-  protocol       = "tcp"
-  cidr_block     = "0.0.0.0/0"
-  from_port      = 1024
-  to_port        = 65535
-}
-
 resource "aws_network_acl_rule" "private_egress80" {
   network_acl_id = "${aws_network_acl.private.id}"
   rule_number    = 120
@@ -406,36 +376,6 @@ resource "aws_security_group" "public_web" {
     Environment      = "${var.environment}"
     TerraformManaged = "true"
   }
-}
-
-resource "aws_instance" "bastion" {
-  ami               = "${data.aws_ami.custom.id}"
-  availability_zone = "${element(aws_subnet.public.*.availability_zone, 0)}"
-  instance_type     = "t2.nano"
-  key_name          = "${var.keypair}"
-
-  vpc_security_group_ids = [
-    "${aws_default_security_group.main.id}",
-    "${aws_security_group.bastion.id}",
-  ]
-
-  subnet_id                   = "${element(aws_subnet.public.*.id, 0)}"
-  associate_public_ip_address = true
-
-  tags {
-    Name             = "${var.name}-bastion"
-    Environment      = "${var.environment}"
-    TerraformManaged = "true"
-  }
-}
-
-resource "aws_eip" "bastion" {
-  vpc = true
-}
-
-resource "aws_eip_association" "bastion" {
-  instance_id   = "${aws_instance.bastion.id}"
-  allocation_id = "${aws_eip.bastion.id}"
 }
 
 # security groups
