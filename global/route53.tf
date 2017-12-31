@@ -52,19 +52,6 @@ resource "aws_route53_record" "nodejs_sideeffect_kr" {
   }
 }
 
-# vault
-resource "aws_route53_record" "vault_sideeffect_kr" {
-  zone_id = "${aws_route53_zone.sideeffect_kr.zone_id}"
-  name    = "vault.sideeffect.kr"
-  type    = "A"
-
-  alias {
-    name                   = "${data.terraform_remote_state.ecs_services.side_effect_alb_dns}"
-    zone_id                = "${data.terraform_remote_state.ecs_services.side_effect_alb_zone_id}"
-    evaluate_target_health = false
-  }
-}
-
 # ACM certificates
 data "aws_acm_certificate" "sideeffect_kr" {
   domain   = "*.sideeffect.kr"

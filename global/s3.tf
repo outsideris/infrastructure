@@ -141,16 +141,3 @@ data "aws_iam_policy_document" "nodejs_sideeffect_kr" {
   }
 }
 
-resource "aws_s3_bucket" "vault_sideeffect_kr" {
-  bucket = "kr.sideeffect.vault"
-  acl    = "private"
-
-  versioning = {
-    enabled = true
-  }
-
-  logging {
-    target_bucket = "${aws_s3_bucket.logs.id}"
-    target_prefix = "vault/"
-  }
-}

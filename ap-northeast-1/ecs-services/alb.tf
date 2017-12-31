@@ -71,12 +71,3 @@ module "side_effect_alb_https_rule_well_known" {
   condition_values = ["/.well-known/*"]
 }
 
-module "side_effect_alb_https_rule_vault" {
-  source           = "../modules/alb-listener-rule"
-  listener_arn     = "${module.side_effect_alb_https.arn}"
-  priority         = 300
-  target_group_arn = "${module.ecs_service_vault.target_group_arn}"
-  condition_field  = "host-header"
-  condition_values = ["vault.sideeffect.kr"]
-}
-

@@ -18,10 +18,6 @@ output "iam_role_ecs_service_role_arn" {
   value = "${aws_iam_role.ecs_service_role.arn}"
 }
 
-output "iam_role_vault_ecs_task_role_arn" {
-  value = "${aws_iam_role.vault_ecs_task.arn}"
-}
-
 output "route53_sideeffect_kr_zone_id" {
   value = "${aws_route53_zone.sideeffect_kr.zone_id}"
 }
