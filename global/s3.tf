@@ -141,3 +141,7 @@ data "aws_iam_policy_document" "nodejs_sideeffect_kr" {
   }
 }
 
+resource "aws_s3_bucket" "test_outsider_ne_kr" {
+  bucket = "kr.ne.outsider.test"
+  acl    = "private"
+}
