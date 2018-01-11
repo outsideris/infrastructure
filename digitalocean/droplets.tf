@@ -1,5 +1,5 @@
 resource "digitalocean_droplet" "blog" {
-  image      = "ubuntu-17-04-x64"
+  image      = "ubuntu-16-04-x64"
   name       = "blog"
   region     = "sgp1"
   size       = "2gb"
@@ -23,6 +23,7 @@ resource "digitalocean_droplet" "blog" {
       "mkdir /home/${var.digitalocean_username}/.ssh",
       "chown ${var.digitalocean_username}:${var.digitalocean_username} /home/${var.digitalocean_username}/.ssh",
       "echo '${file(var.digitalocean_public_key)}' > /home/${var.digitalocean_username}/.ssh/authorized_keys",
+      "sudo apt-get update && sudo apt-get install -y python",
     ]
   }
 }
