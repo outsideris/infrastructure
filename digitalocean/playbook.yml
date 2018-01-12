@@ -1,0 +1,40 @@
+---
+- hosts: blog
+
+  tasks:
+  - name: ping
+    ping:
+
+  - name: install packages
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - git
+    become: true
+
+  - name: Add PHP 7 PPA repository
+    apt_repository:
+      repo: 'ppa:ondrej/php'
+    become: true
+
+  - name: install PHP
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - php7.2
+      - php7.2-cli
+      - php7.2-fpm
+      - php7.2-mysql
+    become: true
+
+  - name: install nginx
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - nginx
+    become: true
+
+  - name: install MySQL
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - mysql-server
+      - mysql-client
+    become: true
+

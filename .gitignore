@@ -4,3 +4,5 @@ terraform.tfstate.backup
 plan
 crash.log
 *.backup
+inventory
+playbook.retry

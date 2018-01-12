@@ -26,4 +26,12 @@ resource "digitalocean_droplet" "blog" {
       "sudo apt-get update && sudo apt-get install -y python",
     ]
   }
+
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.web.private_ip} >> private_ips.txt"
+    command = <<EOF
+      echo "[blog]\n${digitalocean_droplet.blog.ipv4_address} ansible_connection=ssh ansible_ssh_user=${var.digitalocean_username}" > inventory &&
+      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory playbook.yml --extra-vars "ansible_become_pass=${var.digitalocean_password}"
+      EOF
+  }
 }
