@@ -6,35 +6,29 @@
     ping:
 
   - name: install packages
-    apt: name={{ item }} update_cache=yes state=latest
+    apt: name={{ item }} update_cache=yes
     with_items:
       - git
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
     become: true
 
-  - name: Add PHP 7 PPA repository
+  - name: add Docker's official GPG key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+    become: true
+
+  - name: add Docker's repository
     apt_repository:
-      repo: 'ppa:ondrej/php'
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+      state: present
     become: true
 
-  - name: install PHP
-    apt: name={{ item }} update_cache=yes state=latest
+  - name: install docker
+    apt: name={{ item }} update_cache=yes
     with_items:
-      - php7.2
-      - php7.2-cli
-      - php7.2-fpm
-      - php7.2-mysql
+      - docker-ce
     become: true
-
-  - name: install nginx
-    apt: name={{ item }} update_cache=yes state=latest
-    with_items:
-      - nginx
-    become: true
-
-  - name: install MySQL
-    apt: name={{ item }} update_cache=yes state=latest
-    with_items:
-      - mysql-server
-      - mysql-client
-    become: true
-

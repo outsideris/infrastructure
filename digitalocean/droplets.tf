@@ -23,7 +23,8 @@ resource "digitalocean_droplet" "blog" {
       "mkdir /home/${var.digitalocean_username}/.ssh",
       "chown ${var.digitalocean_username}:${var.digitalocean_username} /home/${var.digitalocean_username}/.ssh",
       "echo '${file(var.digitalocean_public_key)}' > /home/${var.digitalocean_username}/.ssh/authorized_keys",
-      "sudo apt-get update && sudo apt-get install -y python",
+      "apt-get update",
+      "apt-get install -y python",
     ]
   }
 
