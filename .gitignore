@@ -8,3 +8,4 @@ crash.log
 inventory
 playbook.retry
 credentials.json
+.idea/
