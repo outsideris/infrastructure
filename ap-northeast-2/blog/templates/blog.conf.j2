@@ -1,0 +1,99 @@
+server {
+  listen       80;
+
+  server_name  {{ domain_name }};
+
+  access_log  /var/log/nginx/blog_access.log;
+  error_log   /var/log/nginx/blog_error.log;
+
+  root /home/ubuntu/www/blog;
+
+  set $fastcgi_skipcache 0;
+
+  if ($query_string) {
+    set $fastcgi_skipcache 1;
+  }
+
+  if ($uri ~ "/owner") {
+    set $fastcgi_skipcache 1;
+  }
+  if ($uri ~ "/control/") {
+    set $fastcgi_skipcache 1;
+  }
+  if ($uri ~ "/checkup") {
+    set $fastcgi_skipcache 1;
+  }
+
+  # Ensure requests for pagespeed optimized resources go to the pagespeed handler
+  # and no extraneous headers get set.
+  location ~ "\.pagespeed\.([a-z]\.)?[a-z]{2}\.[^.]{10}\.[^.]+" {
+    add_header "" "";
+  }
+  location ~ "^/pagespeed_static/" { }
+  location ~ "^/ngx_pagespeed_beacon$" { }
+
+  location /.well-known/acme-challenge {
+    root /var/www/letsencrypt;
+    try_files $uri $uri/ =404;
+  }
+
+  location /myexample {
+    root /home/ubuntu/www/blog/resources;
+    index  index.html index.htm;
+    expires 2h;
+  }
+
+  location /favicon.ico {
+    root /home/ubuntu/www/blog/attach/1;
+    expires 30d;
+  }
+
+  location /i {
+     rewrite ^/i(/.*)$ $1 permanent;
+  }
+
+  location ~* (/(skin|resources|attach)/.*).(jpg|jpeg|png|gif|ico|css|js)$ {
+    expires 30d;
+    add_header Pragma public;
+    add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+  }
+
+  location /  {
+    set $rewrite_base '';
+    if (!-f $request_filename) {
+      rewrite ^(thumbnail)/([0-9]+/.+)$ cache/$1/$2;
+    }
+    if ($request_filename ~* ^(cache)+/+(.+[^/])\.(cache|xml|txt|log)$) {
+      return 403;
+    }
+    if (-d $request_filename) {
+      rewrite ^(.+[^/])$ $1/;
+    }
+    rewrite  ^(.*)$ $rewrite_base/rewrite.php last;
+  }
+
+  location ~ \.php$ {
+    fastcgi_pass   unix:/var/run/php/php5.6-fpm.sock;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+    fastcgi_send_timeout  5m;
+    fastcgi_read_timeout 5m;
+    fastcgi_connect_timeout 5m;
+    add_header X-Cache $upstream_cache_status;
+    add_header Strict-Transport-Security max-age=31536000;
+    fastcgi_cache fastcgicache;
+    fastcgi_cache_bypass $fastcgi_skipcache;
+    fastcgi_no_cache $fastcgi_skipcache;
+  }
+}
+
+server {
+  listen 127.0.0.1:80;
+  server_name localhost;
+  location = /nginx_stub_status {
+      stub_status on;
+      allow 127.0.0.1;
+      deny all;
+  }
+}

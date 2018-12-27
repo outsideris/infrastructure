@@ -1,0 +1,49 @@
+---
+- hosts: blog
+  vars:
+    letsencrypt_email: outsideris@gmail.com
+    domain_name: blog.outsider.ne.kr
+
+  tasks:
+  - name: install letsencrypt
+    apt: name=letsencrypt state=latest
+    become: true
+
+  - name: create letsencrypt directory
+    file: name=/var/www/letsencrypt state=directory
+    become: true
+
+  - name: reload nginx
+    service: name=nginx state=restarted
+    become: true
+
+  - name: create letsencrypt certificate
+    shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
+    args:
+      creates: /etc/letsencrypt/live/{{ domain_name }}
+    become: true
+
+  - name: Generate dhparams
+    shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+    args:
+      creates: /etc/nginx/dhparams.pem
+    become: true
+
+  - name: add nginx blog SSL configurations
+    template:
+      src: ./templates/blog-https.conf.j2
+      dest: /etc/nginx/sites-enabled/blog-https.conf
+      owner: root
+      group: root
+      mode: 0644
+    become: true
+
+  - name: reload nginx
+    service: name=nginx state=restarted
+    become: true
+
+  - name: add letsencrypt cronjob for cert renewal
+    cron:
+      name: letsencrypt_renewal
+      special_time: weekly
+      job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }} && service nginx reload

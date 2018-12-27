@@ -9,3 +9,5 @@ inventory
 playbook.retry
 credentials.json
 .idea/
+temp/
+*.retry
