@@ -278,6 +278,17 @@
   - name: set permissions for .htaccess
     file: path=/home/ubuntu/www/blog/.htaccess mode=0666 state=file
 
+  - name: creates directory for textcube
+    file:
+      path: "{{item}}"
+      state: directory
+      mode: 0777
+      group: staff
+      owner: ubuntu
+    with_items:
+      - /home/ubuntu/www/blog/cache
+    become: true
+
   - name: create a cron to backup
     cron:
       name: weekly backup
