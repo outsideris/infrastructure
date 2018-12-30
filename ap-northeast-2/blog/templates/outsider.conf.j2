@@ -1,0 +1,9 @@
+server {
+    server_name outsider.ne.kr;
+    return 301 $scheme://blog.outsider.ne.kr$request_uri;
+}
+
+server {
+    server_name www.outsider.ne.kr;
+    return 301 $scheme://blog.outsider.ne.kr$request_uri;
+}

@@ -1,0 +1,43 @@
+---
+- hosts: blog
+  vars:
+    domain_name: blog.outsider.ne.kr
+
+  tasks:
+  # New Relic
+  - name: get the key
+    shell: wget -O - https://download.newrelic.com/548C16BF.gpg | sudo apt-key add -
+    args:
+      warn: false
+
+  - name: add the repository
+    shell: sudo sh -c 'echo "deb http://apt.newrelic.com/debian/ newrelic non-free" > /etc/apt/sources.list.d/newrelic.list'
+    args:
+      warn: false
+
+  - name: install new relic
+    apt:
+      pkg:
+        - newrelic-php5
+      update_cache: yes
+    become: true
+
+  # set license in /etc/php/5.6/fpm/conf.d/20-newrelic.ini
+
+  - name: restart php-fpm
+    service: name=php5.6-fpm state=restarted
+    become: true
+
+  # redirect other domains
+  - name: add nginx outsider.ne.kr configurations
+    template:
+      src: ./templates/outsider.conf.j2
+      dest: /etc/nginx/sites-enabled/outsider.conf
+      owner: root
+      group: root
+      mode: 0644
+    become: true
+
+  - name: reload nginx
+    service: name=nginx state=restarted
+    become: true
