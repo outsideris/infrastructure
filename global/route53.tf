@@ -57,3 +57,32 @@ data "aws_acm_certificate" "sideeffect_kr" {
   domain   = "*.sideeffect.kr"
   statuses = ["ISSUED"]
 }
+
+# outsider.ne.kr
+resource "aws_route53_zone" "outsider_ne_kr" {
+  name = "outsider.ne.kr"
+}
+
+resource "aws_route53_record" "blog_outsider_ne_kr" {
+  zone_id = "${aws_route53_zone.outsider_ne_kr.zone_id}"
+  name    = "blog.outsider.ne.kr"
+  type    = "A"
+  ttl     = "300"
+  records = ["13.125.73.169"]
+}
+
+resource "aws_route53_record" "outsider_ne_kr" {
+  zone_id = "${aws_route53_zone.outsider_ne_kr.zone_id}"
+  name    = "outsider.ne.kr"
+  type    = "A"
+  ttl     = "300"
+  records = ["13.125.73.169"]
+}
+
+resource "aws_route53_record" "www_outsider_ne_kr" {
+  zone_id = "${aws_route53_zone.outsider_ne_kr.zone_id}"
+  name    = "www.outsider.ne.kr"
+  type    = "A"
+  ttl     = "300"
+  records = ["13.125.73.169"]
+}
