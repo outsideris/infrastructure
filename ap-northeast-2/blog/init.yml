@@ -278,6 +278,9 @@
   - name: set permissions for .htaccess
     file: path=/home/ubuntu/www/blog/.htaccess mode=0666 state=file
 
+  - name: set permissions for attach directory
+    file: path=/home/ubuntu/www/blog/attach/1 mode=0777 state=directory
+
   - name: creates directory for textcube
     file:
       path: "{{item}}"
