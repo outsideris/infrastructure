@@ -269,6 +269,14 @@
       dest: /home/ubuntu/www/blog
       accept_hostkey: yes
 
+  - name: add .gitconfig
+    copy:
+      src: ./templates/gitconfig
+      dest: /home/ubuntu/.gitconfig
+      owner: ubuntu
+      group: ubuntu
+      mode: 0644
+
   - name: set permissions for blog
     file: path=/home/ubuntu/www/blog mode=0777 state=directory
 

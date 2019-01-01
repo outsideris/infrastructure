@@ -1,0 +1,24 @@
+[user]
+  email = outsideris@gmail.com
+  name = Outsider
+[color]
+  ui = auto
+[alias]
+  ci = commit --signoff
+  st = status
+  co = checkout
+  graph = log --all --graph --decorate --pretty=format:\"%C(yellow)%h%C(reset) %C(bold blue)%d%C(reset) %s%C(cyan)— %an%C(reset) %C(green)(%cr)\" --abbrev-commit --date=relative
+  graph-only = log --graph --decorate --pretty=format:\"%C(yellow)%h%C(reset) %C(bold blue)%d%C(reset) %s%C(cyan)— %an%C(reset) %C(green)(%cr)\" --abbrev-commit --date=relative
+  graph-detail = log --all --graph --decorate
+  graph-simple = log --oneline --graph --decorate
+  graph-stat = log --oneline --graph --decorate --stat
+  graph-diff = log --decorate --stat --graph --pretty=format:\"%d %Cgreen%h%Creset (%ar - %Cred%an%Creset), %s%n\"
+  graph-time = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+  log-local = log --oneline origin..HEAD
+  log-fetched = log --oneline HEAD..origin/master
+[core]
+  editor = vi
+[merge]
+  conflictstyle = diff3
+[github]
+  user = outsideris
