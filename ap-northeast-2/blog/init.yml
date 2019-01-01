@@ -163,6 +163,25 @@
       mode: 0644
     become: true
 
+  - name: creates directory for .well-known
+    file:
+      path: "{{item}}"
+      state: directory
+      mode: 0775
+      group: ubuntu
+      owner: ubuntu
+    with_items:
+      - /home/ubuntu/www/well-known/.well-known
+    become: true
+
+  - name: add keybase
+    copy:
+      src: ./templates/keybase.txt
+      dest: /home/ubuntu/www/well-known/.well-known/keybase.txt
+      owner: ubuntu
+      group: ubuntu
+      mode: 0644
+
   # MySQL
   - name: MySQL | start the MySQL service
     action: service name=mysql state=started

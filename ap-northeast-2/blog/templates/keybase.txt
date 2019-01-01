@@ -1,0 +1,85 @@
+==================================================================
+https://keybase.io/outsider
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://blog.outsider.ne.kr
+  * I am outsider (https://keybase.io/outsider) on keybase.
+  * I have a public key with fingerprint 07C4 6EFF ED56 467A 07D0  7B68 E0B4 8683 131E A9B1
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "010125b2d55eb5a3e1f8d4ad658e98fa17f75be9eca5e83d435c319bb93c5ba636ec0a",
+      "fingerprint": "07c46effed56467a07d07b68e0b48683131ea9b1",
+      "host": "keybase.io",
+      "key_id": "e0b48683131ea9b1",
+      "kid": "010125b2d55eb5a3e1f8d4ad658e98fa17f75be9eca5e83d435c319bb93c5ba636ec0a",
+      "uid": "e052c3fc8cb7653e774ee392f7ab7200",
+      "username": "outsider"
+    },
+    "merkle_root": {
+      "ctime": 1546334645,
+      "hash_meta": "454a5418ab2958b9692274c324d5d0fe6ddec99b03b37e413fc17bfef9ddb4b7",
+      "seqno": 4215425
+    },
+    "revoke": {
+      "sig_ids": [
+        "5185d96399aacce5a7b12c83fa909dfbdfd6cc18aac695a7cf9d01d8c04421360f"
+      ]
+    },
+    "service": {
+      "hostname": "blog.outsider.ne.kr",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1546334693,
+  "expire_in": 157680000,
+  "prev": "7f32856473aa22cd58bb8e876a3e3bf651aadfb35d6de4c858ee9f4983284754",
+  "seqno": 45,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+
+owGtU2lsFUUc70Hta00vWk5ByooS5Nns7uzs0SLHCxJRwBQsEKiuM7Oz7fJe35Z9
+j3I0pcbXlJsCBusVBYEUBQJNkUNSkJYi0IOmEotVI4SWCESgilgJpM4SSIzxo/tl
+s7O/a37zn01JsVGe6EsHKyPpT39eG918DUfljxf6SjlsG8u57FLOTx++aMCgobDu
+twwum+MFXhAhFg0IKYYIUMFUDQkZMlSppppIUEwFYqpRgiBVgSEBSICgYawBAjGS
+gUwJjzgvZ1rBAuoUO1Yw7MoqRJKpaVIDypKsIF4xeAXLKuWxpMoqEIBAkYYFRiy0
+Qy6DhcMoRLMsm62xD/1hvP/A/8+5lzzygSIBJlEJVmQIqKJIlAJNNBWEFZHnXWCI
+OkFURBnaXhIOWQZ1uDIvV0Qdf4Dqjm2H3XJJ2HIhApRkACRZgmyDKFSoF9EwYkwJ
+SghKgoqwqEEVa7ImiopEgCgZ0OBNKhsGJZqGeYCBQiWBRRIUbFJTMwwsYYXlCNHF
+QZvLlkTmIUKWwKEltp+65iGrgNUW4rIXclBQ4dcrDU0GmoYQIRQiBQsiUYGJNF4z
+TGyYhkwIi4KIrLG/hHnwgqESXmLaQOZN7o0y184pschDefekHjWAA3ZB1uMasoI0
+y++waMWOHbaJHWCAwnC4OJTtFhReXuwyllKsP9LSsRU02LgwRgl1QpYdZIUx5L+6
+04CXo8uKLYfqlouAiqzy7HF9aAmTVEwgqmy+FICQKBKDFYpVqioyGweATRkKCLGN
+AmjIBpWIykaDaqakqYwmKVD6R5nsmMKogGmyCoMovMShXFnimhgwICraEzVy8OgB
+8aeC/b/OnbYivr208PEVi4tx71dUYkLq4xXOSukvle5t2rfZj2tnNj0oz+w9XT10
+ecUZbsedhqNNg0ftSsu4PqiJ6z1YkbuBPzbs3KurzjSOLXxu3a5D9yf/sbVeqU8Z
+OOtmZ9nY/oYPknpW5aTGdTdXfnp2atfsjgX+BxkH4kig5QoZM2GbZ3qa7/CokR1/
+bW3vPCkN6XnviXNXZ/nIvM/OdDaT5B2LIueHvXC4um3t4vXig4vds++2XlpRW6Nf
+7vPmLa7r3bnqXTSou6xDrW040bM92bt73RyhMzru9SvO3jupGRlyzIVvj1R4z394
+IkU39Weu3Jt945afq0pOs5J8kVs/dNZtD3gnHjnQnjbjelFb+aGd3kX7J/h8FS+1
+r9gaWSq25Cxr7p9fkXz3p1z99y2XmysDrdum3Xzzk8mxNR09wdF1u6zpf1bLd8on
++UfNXV0y0DN/d+TJ3Lc7WmLztPUFm/vyq7ib0CuMoPVkfHTVxo/759++P2RbbGGK
+b2368PR33t8H8iq3rMxdEzfnNzP9y4vaAjqYryrtWto97tLR73saTt/6Zqbni1OB
+nLkJbQX+HyXr+IB4T+3Coj16TlfSR57UAzW3U168MLx94tB886m+moy8Cy+3NSaN
+uzFj6FepkdZE9VlxZ3njhjGZjVMmnMz7uen58dd2px+v0Vs2dUXeupr4i++7EWdf
+idlfnL63b6NvzqTXxIR5rccServhzLpyOGX1nkyE6d8=
+=Qqun
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/outsider
+
+==================================================================
