@@ -5,7 +5,7 @@ resource "aws_ecs_cluster" "main" {
 
 resource "aws_launch_configuration" "main" {
   name_prefix          = "${var.name}-"
-  image_id             = "ami-3a000e5d"    // amzn-ami-2017.03.b-amazon-ecs-optimized
+  image_id             = "ami-086ca990ae37efc1b"    // amzn2-ami-ecs-hvm-2.0.20190301-x86_64-ebs
   instance_type        = "${var.instance_type}"
   iam_instance_profile = "ecsInstanceRole"
   key_name             = "${var.keypair}"
@@ -16,8 +16,8 @@ resource "aws_launch_configuration" "main" {
   ebs_optimized = false
 
   root_block_device {
-    volume_type           = "gp2"
-    volume_size           = 80
+    volume_type           = "standard"
+    volume_size           = 30
     delete_on_termination = true
   }
 
