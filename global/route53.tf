@@ -86,3 +86,8 @@ resource "aws_route53_record" "www_outsider_ne_kr" {
   ttl     = "300"
   records = ["13.125.73.169"]
 }
+
+# outsider.dev
+resource "aws_route53_zone" "outsider_dev" {
+  name = "outsider.dev"
+}
