@@ -14,6 +14,49 @@ resource "aws_iam_user" "outsider" {
   force_destroy = true
 }
 
+resource "aws_iam_user" "kops_operator" {
+  name          = "kops-operator"
+  path          = "/"
+  force_destroy = true
+}
+
+resource "aws_iam_user_policy" "kops_operator" {
+  user   = "${aws_iam_user.kops_operator.name}"
+  policy = "${data.aws_iam_policy_document.kops_operator.json}"
+}
+
+data "aws_iam_policy_document" "kops_operator" {
+  statement {
+    effect    = "Allow"
+    actions   = ["ec2:*"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["route53:*"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:*"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["iam:*"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["vpc:*"]
+    resources = ["*"]
+  }
+}
+
 # roles
 resource "aws_iam_role" "nodejs-ko-twitter_lambda_function" {
   name               = "nodejs-ko-twitter_lambda_function"
