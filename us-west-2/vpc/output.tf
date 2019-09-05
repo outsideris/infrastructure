@@ -14,6 +14,6 @@ output "vpc_database_subnets" {
   value = [module.vpc.database_subnets]
 }
 
-output "side_effect_default_sg" {
+output "vpc_default_sg" {
   value = module.vpc.default_security_group_id
 }

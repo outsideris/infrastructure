@@ -13,13 +13,13 @@ resource "aws_s3_bucket" "terraform-state" {
     enabled = true
   }
 
-  tags {
+  tags = {
     Name        = "terraform state"
     Environment = "Prod"
   }
 
   logging {
-    target_bucket = "${aws_s3_bucket.logs.id}"
+    target_bucket = aws_s3_bucket.logs.id
     target_prefix = "terraform-state/"
   }
 
@@ -32,7 +32,7 @@ resource "aws_s3_bucket" "terraform-state" {
 resource "aws_s3_bucket" "logs" {
   bucket = "kr.sideeffect.logs"
   acl    = "log-delivery-write"
-  policy = "${data.aws_iam_policy_document.aws_s3_bucket_logs.json}"
+  policy = data.aws_iam_policy_document.aws_s3_bucket_logs.json
 }
 
 data "aws_iam_policy_document" "aws_s3_bucket_logs" {
@@ -47,11 +47,11 @@ data "aws_iam_policy_document" "aws_s3_bucket_logs" {
       "arn:aws:s3:::kr.sideeffect.logs/alb/AWSLogs/410655858509/*",
     ]
 
-    principals = {
+    principals {
       type = "AWS"
 
       identifiers = [
-        "${data.aws_elb_service_account.main.arn}",
+        data.aws_elb_service_account.main.arn,
       ]
     }
   }
@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "aws_s3_bucket_logs" {
       "arn:aws:s3:::kr.sideeffect.logs/cloudtrail/*",
     ]
 
-    principals = {
+    principals {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
@@ -90,7 +90,7 @@ data "aws_iam_policy_document" "aws_s3_bucket_logs" {
       "arn:aws:s3:::kr.sideeffect.logs",
     ]
 
-    principals = {
+    principals {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
@@ -100,7 +100,7 @@ data "aws_iam_policy_document" "aws_s3_bucket_logs" {
 resource "aws_s3_bucket" "labs_sideeffect_kr" {
   bucket = "kr.sideeffect.labs"
   acl    = "private"
-  policy = "${data.aws_iam_policy_document.labs_sideeffect_kr.json}"
+  policy = data.aws_iam_policy_document.labs_sideeffect_kr.json
 
   website {
     index_document = "index.html"
@@ -114,7 +114,7 @@ data "aws_iam_policy_document" "labs_sideeffect_kr" {
 
     principals {
       type        = "AWS"
-      identifiers = ["${aws_cloudfront_origin_access_identity.labs_sideeffect_kr.iam_arn}"]
+      identifiers = [aws_cloudfront_origin_access_identity.labs_sideeffect_kr.iam_arn]
     }
   }
 }
@@ -122,7 +122,7 @@ data "aws_iam_policy_document" "labs_sideeffect_kr" {
 resource "aws_s3_bucket" "nodejs_sideeffect_kr" {
   bucket = "kr.sideeffect.nodejs"
   acl    = "private"
-  policy = "${data.aws_iam_policy_document.nodejs_sideeffect_kr.json}"
+  policy = data.aws_iam_policy_document.nodejs_sideeffect_kr.json
 
   website {
     index_document = "index.html"
@@ -136,7 +136,7 @@ data "aws_iam_policy_document" "nodejs_sideeffect_kr" {
 
     principals {
       type        = "AWS"
-      identifiers = ["${aws_cloudfront_origin_access_identity.nodejs_sideeffect_kr.iam_arn}"]
+      identifiers = [aws_cloudfront_origin_access_identity.nodejs_sideeffect_kr.iam_arn]
     }
   }
 }
@@ -145,3 +145,30 @@ resource "aws_s3_bucket" "test_outsider_ne_kr" {
   bucket = "kr.ne.outsider.test"
   acl    = "private"
 }
+
+resource "aws_s3_bucket" "sideeffect_kops_state_store" {
+  bucket = "kr.sideeffect-kops-state-store"
+  acl    = "private"
+
+  versioning {
+    enabled = true
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
+  tags = {
+    Name        = "kops state store"
+    Environment = "Test"
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+

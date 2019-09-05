@@ -4,7 +4,7 @@ resource "aws_cloudfront_origin_access_identity" "labs_sideeffect_kr" {
 
 resource "aws_cloudfront_distribution" "labs_sideeffect_kr" {
   origin {
-    domain_name = "${aws_s3_bucket.labs_sideeffect_kr.website_endpoint}"
+    domain_name = aws_s3_bucket.labs_sideeffect_kr.website_endpoint
     origin_path = ""
     origin_id   = "S3-${aws_s3_bucket.labs_sideeffect_kr.bucket}"
 
@@ -50,12 +50,12 @@ resource "aws_cloudfront_distribution" "labs_sideeffect_kr" {
     }
   }
 
-  tags {
+  tags = {
     Environment = "production"
   }
 
   viewer_certificate {
-    acm_certificate_arn      = "${data.terraform_remote_state.us_east_1.labs_sideeffect_kr_certificate_arn}"
+    acm_certificate_arn      = data.terraform_remote_state.us_east_1.outputs.labs_sideeffect_kr_certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1"
   }
@@ -67,7 +67,7 @@ resource "aws_cloudfront_origin_access_identity" "nodejs_sideeffect_kr" {
 
 resource "aws_cloudfront_distribution" "nodejs_sideeffect_kr" {
   origin {
-    domain_name = "${aws_s3_bucket.nodejs_sideeffect_kr.website_endpoint}"
+    domain_name = aws_s3_bucket.nodejs_sideeffect_kr.website_endpoint
     origin_path = ""
     origin_id   = "S3-${aws_s3_bucket.nodejs_sideeffect_kr.bucket}"
 
@@ -113,13 +113,14 @@ resource "aws_cloudfront_distribution" "nodejs_sideeffect_kr" {
     }
   }
 
-  tags {
+  tags = {
     Environment = "production"
   }
 
   viewer_certificate {
-    acm_certificate_arn      = "${data.terraform_remote_state.us_east_1.nodejs_sideeffect_kr_certificate_arn}"
+    acm_certificate_arn      = data.terraform_remote_state.us_east_1.outputs.nodejs_sideeffect_kr_certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1"
   }
 }
+

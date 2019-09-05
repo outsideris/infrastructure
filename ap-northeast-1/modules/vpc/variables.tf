@@ -12,14 +12,15 @@ variable "environment" {
 
 variable "public_subnets" {
   description = "CIDR list of public subnets"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "private_subnets" {
   description = "CIDR list of private subnets"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "keypair" {
   description = "The keypair name to use for bastion host"
 }
+

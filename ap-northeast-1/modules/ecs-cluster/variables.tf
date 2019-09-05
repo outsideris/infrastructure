@@ -8,13 +8,13 @@ variable "keypair" {
 
 variable "security_groups" {
   description = "The security groups into which the instances should be applied."
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
 variable "availability_zones" {
   description = "The availability zones of the VPC which the cluster in"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "subnets" {
@@ -41,3 +41,4 @@ variable "instance_type" {
 variable "environment" {
   description = "Environment tag, e.g prod"
 }
+

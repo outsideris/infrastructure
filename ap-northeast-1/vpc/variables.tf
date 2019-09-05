@@ -4,7 +4,8 @@ variable "keypair" {
 }
 
 // availability zones
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+}
 
 // latest ubuntu ami
 data "aws_ami" "ubuntu" {
@@ -44,12 +45,13 @@ data "aws_ami" "outsider" {
 data "terraform_remote_state" "global" {
   backend = "s3"
 
-  config {
-    bucket     = "kr.sideeffect.terraform.state"
-    key        = "global/terraform.tfstate"
-    region     = "ap-northeast-1"
-    encrypt    = true
+  config = {
+    bucket         = "kr.sideeffect.terraform.state"
+    key            = "global/terraform.tfstate"
+    region         = "ap-northeast-1"
+    encrypt        = true
     dynamodb_table = "SideEffectTerraformStateLock"
-    acl        = "bucket-owner-full-control"
+    acl            = "bucket-owner-full-control"
   }
 }
+

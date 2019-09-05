@@ -18,3 +18,4 @@ variable "certificate_arn" {
 variable "target_group_arn" {
   description = "The target group to forward"
 }
+

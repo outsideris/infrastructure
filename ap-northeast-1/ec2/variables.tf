@@ -1,11 +1,12 @@
 // availability zones
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+}
 
 // global terraform
 data "terraform_remote_state" "global" {
   backend = "s3"
 
-  config {
+  config = {
     bucket     = "kr.sideeffect.terraform.state"
     key        = "global/terraform.tfstate"
     region     = "ap-northeast-1"
@@ -19,7 +20,7 @@ data "terraform_remote_state" "global" {
 data "terraform_remote_state" "vpc" {
   backend = "s3"
 
-  config {
+  config = {
     bucket     = "kr.sideeffect.terraform.state"
     key        = "ap-northeast-1/vpc/terraform.tfstate"
     region     = "ap-northeast-1"
@@ -33,3 +34,4 @@ data "terraform_remote_state" "vpc" {
 variable "keypair" {
   default = "outsider-aws"
 }
+

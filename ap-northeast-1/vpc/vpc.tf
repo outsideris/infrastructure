@@ -6,5 +6,6 @@ module "side_effect_vpc" {
   environment     = "production"
   public_subnets  = ["10.10.1.0/24", "10.10.2.0/24"]
   private_subnets = ["10.10.10.0/24", "10.10.11.0/24"]
-  keypair         = "${var.keypair}"
+  keypair         = var.keypair
 }
+

@@ -16,6 +16,7 @@ variable "condition_field" {
 
 variable "condition_values" {
   description = "The patterns to match."
-  type        = "list"
+  type        = list(string)
   default     = []
 }
+

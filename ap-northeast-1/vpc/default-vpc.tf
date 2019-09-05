@@ -6,26 +6,26 @@ resource "aws_vpc" "default" {
   enable_dns_support   = true
   instance_tenancy     = "default"
 
-  tags {
+  tags = {
     "Name" = "default"
   }
 }
 
 resource "aws_route_table" "default" {
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = aws_vpc.default.id
 
-  tags {
+  tags = {
     "Name" = "default"
   }
 }
 
 resource "aws_main_route_table_association" "default" {
-  vpc_id         = "${aws_vpc.default.id}"
-  route_table_id = "${aws_route_table.default.id}"
+  vpc_id         = aws_vpc.default.id
+  route_table_id = aws_route_table.default.id
 }
 
 resource "aws_network_acl" "default" {
-  vpc_id     = "${aws_vpc.default.id}"
+  vpc_id     = aws_vpc.default.id
   subnet_ids = []
 
   ingress {
@@ -46,7 +46,7 @@ resource "aws_network_acl" "default" {
     cidr_block = "0.0.0.0/0"
   }
 
-  tags {
+  tags = {
     "Name" = "default"
   }
 }
@@ -54,7 +54,7 @@ resource "aws_network_acl" "default" {
 resource "aws_security_group" "default" {
   name        = "default"
   description = "default VPC security group"
-  vpc_id      = "${aws_vpc.default.id}"
+  vpc_id      = aws_vpc.default.id
 
   ingress {
     from_port   = 0
@@ -70,7 +70,8 @@ resource "aws_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     "Name" = "default"
   }
 }
+
