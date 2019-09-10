@@ -1,4 +1,7 @@
 // availability zones
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+}
 
-variable "lightsail_private_key" {}
+variable "lightsail_private_key" {
+}
+

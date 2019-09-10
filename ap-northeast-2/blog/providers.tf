@@ -1,4 +1,5 @@
 provider "aws" {
-  version = "~> 1.54"
-  region = "ap-northeast-2"
+  version = "~> 2.27.0"
+  region  = "ap-northeast-2"
 }
+
