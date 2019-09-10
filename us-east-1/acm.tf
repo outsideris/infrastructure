@@ -7,3 +7,4 @@ data "aws_acm_certificate" "nodejs_sideeffect_kr" {
   domain   = "nodejs.sideeffect.kr"
   statuses = ["ISSUED"]
 }
+
