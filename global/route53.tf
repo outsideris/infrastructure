@@ -87,6 +87,14 @@ resource "aws_route53_record" "www_outsider_ne_kr" {
   records = ["13.125.73.169"]
 }
 
+resource "aws_route53_record" "blog_outsider_ne_kr_google_searchconsole" {
+  zone_id = aws_route53_zone.outsider_ne_kr.zone_id
+  name    = "blog.outsider.ne.kr"
+  type    = "TXT"
+  ttl     = "300"
+  records = ["google-site-verification=5B1OON1Y0sF-uyT3uCgHG4ugUvq8moJWjdFjTdzHF2M"]
+}
+
 # outsider.dev
 resource "aws_route53_zone" "outsider_dev" {
   name = "outsider.dev"
