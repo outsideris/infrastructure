@@ -1,0 +1,6 @@
+---
+- hosts: teslamate
+
+  tasks:
+  - name: ping
+    ping:
