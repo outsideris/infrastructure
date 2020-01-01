@@ -28,9 +28,11 @@ resource "aws_instance" "teslamate" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt update",
-      "sudo apt install -y apt-transport-https ca-certificates curl python software-properties-common",
-      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+      "sudo apt install -y apt-transport-https ca-certificates curl software-properties-common",
+      "sudo apt update",
+      "sudo apt install -y python3-pip",
       // install docker
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
       "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable\"",
       "sudo apt update",
       "apt-cache policy docker-ce",
@@ -47,8 +49,8 @@ resource "aws_instance" "teslamate" {
 
   provisioner "local-exec" {
     command = <<EOF
-      echo "[teslamate]\n${self.public_ip} ansible_connection=ssh ansible_ssh_user=ubuntu ansible_ssh_private_key_file=${var.keypair_private}" > inventory
-      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory teslamate.yml
+      echo "[teslamate]\n${self.public_ip} ansible_connection=ssh ansible_ssh_user=ubuntu ansible_ssh_private_key_file=${var.keypair_private}" > teslamate/inventory
+      # ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i teslamate/inventory teslamate/installation.yml
     EOF
   }
 }
