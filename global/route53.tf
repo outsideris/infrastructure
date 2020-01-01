@@ -100,3 +100,18 @@ resource "aws_route53_zone" "outsider_dev" {
   name = "outsider.dev"
 }
 
+resource "aws_route53_record" "teslamate_outsider_dev" {
+  zone_id = aws_route53_zone.outsider_dev.zone_id
+  name    = "teslamate.outsider.dev"
+  type    = "A"
+  ttl     = "300"
+  records = [data.terraform_remote_state.ap_ne1_ec2.outputs.teslamate_ec2_ip]
+}
+
+resource "aws_route53_record" "tesla_grafana_outsider_dev" {
+  zone_id = aws_route53_zone.outsider_dev.zone_id
+  name    = "tesla-grafana.outsider.dev"
+  type    = "A"
+  ttl     = "300"
+  records = [data.terraform_remote_state.ap_ne1_ec2.outputs.teslamate_ec2_ip]
+}

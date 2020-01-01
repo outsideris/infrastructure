@@ -40,6 +40,20 @@ data "terraform_remote_state" "us_east_1" {
   }
 }
 
+# us-east-1 terraform
+data "terraform_remote_state" "ap_ne1_ec2" {
+  backend = "s3"
+
+  config = {
+    bucket         = "kr.sideeffect.terraform.state"
+    key            = "ap-northeast-1/ec2/terraform.tfstate"
+    region         = "ap-northeast-1"
+    encrypt        = true
+    dynamodb_table = "SideEffectTerraformStateLock"
+    acl            = "bucket-owner-full-control"
+  }
+}
+
 data "aws_elb_service_account" "main" {
 }
 
