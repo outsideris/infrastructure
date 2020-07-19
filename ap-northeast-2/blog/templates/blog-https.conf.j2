@@ -88,6 +88,16 @@ server {
     expires 30d;
   }
 
+  location /robots.txt {
+    root /home/ubuntu/www/blog/attach/static;
+    expires 1d;
+  }
+
+  location /ads.txt {
+    root /home/ubuntu/www/blog/attach/static;
+    expires 1d;
+  }
+
   location /i {
      rewrite ^/i(/.*)$ $1 permanent;
   }
