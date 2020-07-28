@@ -36,7 +36,7 @@ resource "aws_cloudfront_distribution" "labs_sideeffect_kr" {
       }
     }
 
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     max_ttl                = 360
     default_ttl            = 60
@@ -99,7 +99,7 @@ resource "aws_cloudfront_distribution" "nodejs_sideeffect_kr" {
       }
     }
 
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     max_ttl                = 360
     default_ttl            = 60
