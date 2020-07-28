@@ -47,7 +47,7 @@ module "side_effect_alb_https" {
   alb_arn          = module.side_effect_alb.arn
   port             = "443"
   protocol         = "HTTPS"
-  certificate_arn  = data.terraform_remote_state.global.outputs.sideeffect_kr_certificate_arn
+  certificate_arn  = data.terraform_remote_state.global.outputs.wild_sideeffect_kr_certificate_arn
   target_group_arn = module.ecs_service_popular_convention.target_group_arn
 }
 
