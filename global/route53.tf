@@ -109,3 +109,8 @@ resource "aws_route53_record" "tesla_grafana_outsider_dev" {
   ttl     = "300"
   records = [data.terraform_remote_state.ap_ne1_ec2.outputs.teslamate_ec2_ip]
 }
+
+# cluster.outsider.dev
+resource "aws_route53_zone" "cluster_outsider_dev" {
+  name = "cluster.outsider.dev"
+}
