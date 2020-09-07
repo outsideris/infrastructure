@@ -172,3 +172,7 @@ resource "aws_s3_bucket" "sideeffect_kops_state_store" {
   }
 }
 
+resource "aws_s3_bucket" "kops_state_cluster_outsider_dev" {
+  bucket = "kops-state.cluster.outsider.dev"
+  acl    = "private"
+}
