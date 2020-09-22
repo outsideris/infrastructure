@@ -1,0 +1,54 @@
+---
+- hosts: teslamate
+
+  tasks:
+  - name: ping
+    ping:
+
+  - pip:
+      name:
+        - docker
+        - docker-compose
+
+  - name: creates directory for teslamate
+    file:
+      path: "{{item}}"
+      state: directory
+      mode: 0775
+      group: root
+      owner: root
+    with_items:
+      - /root/teslamate
+    become: true
+
+  - name: copy .htpasswd
+    copy:
+      src: ./.htpasswd
+      dest: /root/teslamate/.htpasswd
+      owner: root
+      group: root
+      mode: 0600
+
+  - name: copy .env
+    copy:
+      src: ./.env
+      dest: /root/teslamate/.env
+      owner: root
+      group: root
+      mode: 0600
+
+  - name: copy docker-compose.yml
+    copy:
+      src: ./docker-compose.yml
+      dest: /root/teslamate/docker-compose.yml
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Launch teslamate
+    docker_compose:
+      project_src: teslamate
+    register: output
+
+  - debug:
+      var: output
