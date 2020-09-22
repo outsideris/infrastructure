@@ -54,6 +54,20 @@ data "terraform_remote_state" "ap_ne1_ec2" {
   }
 }
 
+# digital ocean
+data "terraform_remote_state" "digital_ocean" {
+  backend = "s3"
+
+  config = {
+    bucket         = "kr.sideeffect.terraform.state"
+    key            = "digitalocean/terraform.tfstate"
+    region         = "ap-northeast-1"
+    encrypt        = true
+    dynamodb_table = "SideEffectTerraformStateLock"
+    acl            = "bucket-owner-full-control"
+  }
+}
+
 data "aws_elb_service_account" "main" {
 }
 

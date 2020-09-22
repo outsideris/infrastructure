@@ -99,7 +99,7 @@ resource "aws_route53_record" "teslamate_outsider_dev" {
   name    = "teslamate.outsider.dev"
   type    = "A"
   ttl     = "300"
-  records = [data.terraform_remote_state.ap_ne1_ec2.outputs.teslamate_ec2_ip]
+  records = [data.terraform_remote_state.digital_ocean.outputs.teslamate_ip]
 }
 
 resource "aws_route53_record" "tesla_grafana_outsider_dev" {
@@ -107,7 +107,7 @@ resource "aws_route53_record" "tesla_grafana_outsider_dev" {
   name    = "tesla-grafana.outsider.dev"
   type    = "A"
   ttl     = "300"
-  records = [data.terraform_remote_state.ap_ne1_ec2.outputs.teslamate_ec2_ip]
+  records = [data.terraform_remote_state.digital_ocean.outputs.teslamate_ip]
 }
 
 # cluster.outsider.dev
