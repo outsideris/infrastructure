@@ -24,13 +24,12 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-// latest my own ami
 data "aws_ami" "outsider" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["outsider-aws-ubuntu*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   }
 
   filter {
@@ -38,7 +37,7 @@ data "aws_ami" "outsider" {
     values = ["hvm"]
   }
 
-  owners = ["410655858509"] # me
+  owners = ["099720109477"] # Canonical
 }
 
 // global terraform

@@ -10,13 +10,8 @@ variable "target_group_arn" {
   description = "The target group to forward"
 }
 
-variable "condition_field" {
-  description = "The condition name of listener rule, must be one of path-pattern or host-header"
-}
-
-variable "condition_values" {
-  description = "The patterns to match."
+variable "path_pattern" {
+  description = "The path pattern of listener rule"
   type        = list(string)
   default     = []
 }
-

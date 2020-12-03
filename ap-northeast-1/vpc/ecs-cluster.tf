@@ -9,7 +9,6 @@ module "side_effect_ecs_cluster" {
     module.side_effect_vpc.security_group_ephemeral_ports,
   ]
 
-  availability_zones       = module.side_effect_vpc.availability_zones
   subnets                  = module.side_effect_vpc.public_subnets
   cluster_min_size         = 1
   cluster_max_size         = 2

@@ -12,11 +12,6 @@ variable "security_groups" {
   default     = []
 }
 
-variable "availability_zones" {
-  description = "The availability zones of the VPC which the cluster in"
-  type        = list(string)
-}
-
 variable "subnets" {
   description = "The subnets which the cluster in."
   default     = []

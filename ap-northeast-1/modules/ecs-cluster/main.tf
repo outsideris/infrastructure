@@ -28,7 +28,6 @@ resource "aws_launch_configuration" "main" {
 
 resource "aws_autoscaling_group" "main" {
   name                 = var.name
-  availability_zones   = var.availability_zones
   launch_configuration = aws_launch_configuration.main.name
 
   vpc_zone_identifier = var.subnets

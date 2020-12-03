@@ -28,8 +28,7 @@ module "side_effect_alb_http_rule_popular_convention" {
   listener_arn     = module.side_effect_alb_http.arn
   priority         = 100
   target_group_arn = module.ecs_service_popular_convention.target_group_arn
-  condition_field  = "path-pattern"
-  condition_values = ["/popularconvention/*"]
+  path_pattern     = ["/popularconvention/*"]
 }
 
 module "side_effect_alb_http_rule_well_known" {
@@ -37,8 +36,7 @@ module "side_effect_alb_http_rule_well_known" {
   listener_arn     = module.side_effect_alb_http.arn
   priority         = 200
   target_group_arn = module.ecs_service_well_known.target_group_arn
-  condition_field  = "path-pattern"
-  condition_values = ["/.well-known/*"]
+  path_pattern     = ["/.well-known/*"]
 }
 
 # https
@@ -56,8 +54,7 @@ module "side_effect_alb_https_rule_popular_convention" {
   listener_arn     = module.side_effect_alb_https.arn
   priority         = 100
   target_group_arn = module.ecs_service_popular_convention.target_group_arn
-  condition_field  = "path-pattern"
-  condition_values = ["/popularconvention/*"]
+  path_pattern     = ["/popularconvention/*"]
 }
 
 module "side_effect_alb_https_rule_well_known" {
@@ -65,6 +62,5 @@ module "side_effect_alb_https_rule_well_known" {
   listener_arn     = module.side_effect_alb_https.arn
   priority         = 200
   target_group_arn = module.ecs_service_well_known.target_group_arn
-  condition_field  = "path-pattern"
-  condition_values = ["/.well-known/*"]
+  path_pattern     = ["/.well-known/*"]
 }
