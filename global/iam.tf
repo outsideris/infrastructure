@@ -289,7 +289,7 @@ resource "aws_iam_policy_attachment" "IAMFullAccess-policy-attachment" {
   name       = "IAMFullAccess-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
   groups     = []
-  users      = [aws_iam_user.outsider.name]
+  users      = ["kops-operator", aws_iam_user.outsider.name]
   roles      = []
 }
 
@@ -297,7 +297,7 @@ resource "aws_iam_policy_attachment" "AmazonS3FullAccess-policy-attachment" {
   name       = "AmazonS3FullAccess-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
   groups     = []
-  users      = [aws_iam_user.outsider.name]
+  users      = ["kops-operator", aws_iam_user.outsider.name]
   roles      = [aws_iam_role.nodejs-ko-twitter_lambda_function.name]
 }
 
