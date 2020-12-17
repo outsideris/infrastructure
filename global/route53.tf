@@ -110,6 +110,14 @@ resource "aws_route53_record" "tesla_grafana_outsider_dev" {
   records = [data.terraform_remote_state.digital_ocean.outputs.teslamate_ip]
 }
 
+resource "aws_route53_record" "cluster_outsider_dev" {
+  zone_id = aws_route53_zone.outsider_dev.zone_id
+  name    = "cluster.outsider.dev"
+  type    = "NS"
+  ttl     = "300"
+  records = aws_route53_zone.cluster_outsider_dev.name_servers
+}
+
 # cluster.outsider.dev
 resource "aws_route53_zone" "cluster_outsider_dev" {
   name = "cluster.outsider.dev"
