@@ -118,6 +118,19 @@ resource "aws_route53_record" "cluster_outsider_dev" {
   records = aws_route53_zone.cluster_outsider_dev.name_servers
 }
 
+resource "aws_route53_record" "cb_outsider_dev" {
+  zone_id = aws_route53_zone.outsider_dev.zone_id
+  name    = "cb.outsider.dev"
+  type    = "NS"
+  ttl     = "300"
+  records = [
+    "ns-1533.awsdns-63.org.",
+    "ns-1795.awsdns-32.co.uk.",
+    "ns-587.awsdns-09.net.",
+    "ns-228.awsdns-28.com.",
+  ]
+}
+
 # cluster.outsider.dev
 resource "aws_route53_zone" "cluster_outsider_dev" {
   name = "cluster.outsider.dev"
