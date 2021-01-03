@@ -13,10 +13,10 @@ resource "aws_acm_certificate" "labs_sideeffect_kr" {
 }
 
 resource "aws_route53_record" "labs_sideeffect_kr_validation" {
-  name    = aws_acm_certificate.labs_sideeffect_kr.domain_validation_options.0.resource_record_name
-  type    = aws_acm_certificate.labs_sideeffect_kr.domain_validation_options.0.resource_record_type
+  name    = tolist(aws_acm_certificate.labs_sideeffect_kr.domain_validation_options).0.resource_record_name
+  type    = tolist(aws_acm_certificate.labs_sideeffect_kr.domain_validation_options).0.resource_record_type
   zone_id = data.terraform_remote_state.global.outputs.route53_sideeffect_kr_zone_id
-  records = [aws_acm_certificate.labs_sideeffect_kr.domain_validation_options.0.resource_record_value]
+  records = [tolist(aws_acm_certificate.labs_sideeffect_kr.domain_validation_options).0.resource_record_value]
   ttl     = 60
 }
 
@@ -40,10 +40,10 @@ resource "aws_acm_certificate" "nodejs_sideeffect_kr" {
 }
 
 resource "aws_route53_record" "nodejs_sideeffect_kr_validation" {
-  name    = aws_acm_certificate.nodejs_sideeffect_kr.domain_validation_options.0.resource_record_name
-  type    = aws_acm_certificate.nodejs_sideeffect_kr.domain_validation_options.0.resource_record_type
+  name    = tolist(aws_acm_certificate.nodejs_sideeffect_kr.domain_validation_options).0.resource_record_name
+  type    = tolist(aws_acm_certificate.nodejs_sideeffect_kr.domain_validation_options).0.resource_record_type
   zone_id = data.terraform_remote_state.global.outputs.route53_sideeffect_kr_zone_id
-  records = [aws_acm_certificate.nodejs_sideeffect_kr.domain_validation_options.0.resource_record_value]
+  records = [tolist(aws_acm_certificate.nodejs_sideeffect_kr.domain_validation_options).0.resource_record_value]
   ttl     = 60
 }
 
