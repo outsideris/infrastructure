@@ -62,7 +62,7 @@ resource "aws_route53_record" "blog_outsider_ne_kr" {
   name    = "blog.outsider.ne.kr"
   type    = "A"
   ttl     = "300"
-  records = ["13.125.73.169"]
+  records = [var.blog_instance_ip]
 }
 
 resource "aws_route53_record" "outsider_ne_kr" {
@@ -70,7 +70,7 @@ resource "aws_route53_record" "outsider_ne_kr" {
   name    = "outsider.ne.kr"
   type    = "A"
   ttl     = "300"
-  records = ["13.125.73.169"]
+  records = [var.blog_instance_ip]
 }
 
 resource "aws_route53_record" "www_outsider_ne_kr" {
@@ -78,7 +78,7 @@ resource "aws_route53_record" "www_outsider_ne_kr" {
   name    = "www.outsider.ne.kr"
   type    = "A"
   ttl     = "300"
-  records = ["13.125.73.169"]
+  records = [var.blog_instance_ip]
 }
 
 resource "aws_route53_record" "blog_outsider_ne_kr_google_searchconsole" {

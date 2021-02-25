@@ -1,4 +1,8 @@
 # VPC terraform
+variable "blog_instance_ip" {
+  default = "13.125.184.119"
+}
+
 data "terraform_remote_state" "vpc" {
   backend = "s3"
 
