@@ -17,10 +17,24 @@
     service: name=nginx state=restarted
     become: true
 
+  - name: install snapd
+    shell: snap install core
+    become: true
+
+  - name: refresh snapd
+    shell: snap refresh core
+    become: true
+
+  - name: install certbot
+    shell: snap install --classic certbot
+    become: true
+
+  - name: make symlink for cerbot
+    shell: ln -s /snap/bin/certbot /usr/bin/certbot
+    become: true
+
   - name: create letsencrypt certificate
-    shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
-    args:
-      creates: /etc/letsencrypt/live/{{ domain_name }}
+    shell: certbot --nginx -n -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
     become: true
 
   - name: Generate dhparams
@@ -47,4 +61,5 @@
     cron:
       name: letsencrypt_renewal
       special_time: weekly
-      job: sudo certbot certonly --nginx && service nginx reload
+      job: certbot certonly --nginx && service nginx reload
+    become: true
