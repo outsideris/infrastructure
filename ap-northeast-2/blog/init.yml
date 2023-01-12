@@ -228,7 +228,7 @@
   - name: MySQL | create MySQL configuration file
     template:
       src: ./templates/my.cnf.j2
-      dest: /etc/my.cnf
+      dest: /etc/mysql/mysql.conf.d/mysqld.cnf
       backup: yes
       owner: root
       group: root

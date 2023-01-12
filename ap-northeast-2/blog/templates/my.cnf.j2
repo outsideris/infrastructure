@@ -1,78 +1,87 @@
-# Example mysql config file for very large systems.
-#
-# This is for large system with memory of 1G-2G where the system runs mainly
-# MySQL.
-#
-# You can copy this file to
-# /etc/my.cnf to set global options,
-# mysql-data-dir/my.cnf to set server-specific options (in this
-# installation this directory is /var/lib/mysql) or
-# ~/.my.cnf to set user-specific options.
-#
-# One can in this file use all long options that the program supports.
-# If you want to know which options a program support, run the program
-# with --help option.
+[mysqld_safe]
+socket    = /var/run/mysqld/mysqld.sock
+nice    = 0
 
-# The following options will be passed to all MySQL clients
-[client]
-#password	= your_password
-port		= 3306
-socket		= /var/run/mysqld/mysqld.sock
-
-# Here follows entries for some specific programs
-
-# The MySQL server
 [mysqld]
-port		= 3306
-socket		= /var/run/mysqld/mysqld.sock
-skip-locking
-set-variable	= key_buffer=384M
-set-variable	= max_allowed_packet=1M
-set-variable	= table_cache=512
-set-variable	= sort_buffer=2M
-set-variable	= record_buffer=2M
-set-variable	= thread_cache=8
-# Try number of CPU's*2 for thread_concurrency
-set-variable	= thread_concurrency=4
-set-variable	= myisam_sort_buffer_size=64M
-log-bin
-server-id	= 1
-
-# Uncomment the following if you are using Innobase tables
-innodb_data_file_path = ibdata1:2000M;ibdata2:2000M
-innodb_data_home_dir = /var/lib/mysql/
-innodb_log_group_home_dir = /var/lib/mysql/
-innodb_log_arch_dir = /var/lib/mysql/
-set-variable = innodb_mirrored_log_groups=1
-set-variable = innodb_log_files_in_group=3
-set-variable = innodb_log_file_size=5M
-set-variable = innodb_log_buffer_size=8M
-innodb_flush_log_at_trx_commit=1
-innodb_log_archive=0
-set-variable = innodb_buffer_pool_size=16M
-set-variable = innodb_additional_mem_pool_size=2M
-set-variable = innodb_file_io_threads=4
-set-variable = innodb_lock_wait_timeout=50
-
-[mysqldump]
-quick
-set-variable	= max_allowed_packet=16M
-
-[mysql]
-no-auto-rehash
-# Remove the next comment character if you are not familiar with SQL
-#safe-updates
-
-[isamchk]
-set-variable	= sort_buffer=256M
-set-variable	= read_buffer=2M
-set-variable	= write_buffer=2M
-
-[myisamchk]
-set-variable	= key_buffer=256M
-set-variable	= sort_buffer=256M
-set-variable	= read_buffer=2M
-set-variable	= write_buffer=2M
-
-[mysqlhotcopy]
-interactive-timeout
+user    = mysql
+pid-file  = /var/run/mysqld/mysqld.pid
+socket    = /var/run/mysqld/mysqld.sock
+port    = 3306
+basedir   = /usr
+datadir   = /var/lib/mysql
+tmpdir    = /tmp
+lc-messages-dir = /usr/share/mysql
+skip-external-locking
+#
+# Instead of skip-networking the default is now to listen only on
+# localhost which is more compatible and is not less secure.
+bind-address    = 127.0.0.1
+#
+# * Fine Tuning
+#
+key_buffer_size   = 3M
+max_allowed_packet  = 16M
+thread_stack    = 192K
+thread_cache_size       = 8
+# This replaces the startup script and checks MyISAM tables if needed
+# the first time they are touched
+myisam-recover-options  = BACKUP
+#max_connections        = 100
+#table_open_cache       = 64
+#thread_concurrency     = 10
+#
+# * Query Cache Configuration
+#
+query_cache_type        = 0
+query_cache_limit = 1M
+query_cache_size        = 0
+#
+# * Logging and Replication
+#
+# Both location gets rotated by the cronjob.
+# Be aware that this log type is a performance killer.
+# As of 5.1 you can enable the log at runtime!
+#general_log_file        = /var/log/mysql/mysql.log
+#general_log             = 1
+#
+# Error log - should be very few entries.
+#
+log_error = /var/log/mysql/error.log
+#
+# Here you can see queries with especially long duration
+#slow_query_log   = 1
+#slow_query_log_file  = /var/log/mysql/mysql-slow.log
+#long_query_time = 2
+#log-queries-not-using-indexes
+#
+# The following can be used as easy to replay backup logs or for replication.
+# note: if you are setting up a replication slave, see README.Debian about
+#       other settings you may need to change.
+#server-id    = 1
+#log_bin      = /var/log/mysql/mysql-bin.log
+expire_logs_days  = 10
+max_binlog_size   = 100M
+#binlog_do_db   = include_database_name
+#binlog_ignore_db = include_database_name
+#
+# * InnoDB
+#
+# InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
+# Read the manual for more InnoDB related options. There are many!
+#
+innodb_buffer_pool_size = 200M
+innodb_log_file_size = 48M
+# * Security Features
+#
+# Read the manual, too, if you want chroot!
+# chroot = /var/lib/mysql/
+#
+# For generating SSL certificates I recommend the OpenSSL GUI "tinyca".
+#
+# ssl-ca=/etc/mysql/cacert.pem
+# ssl-cert=/etc/mysql/server-cert.pem
+# ssl-key=/etc/mysql/server-key.pem
+#
+join_buffer_size    = 10M
+tmp_table_size      = 90M
+max_heap_table_size = 90M
