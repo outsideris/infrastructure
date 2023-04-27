@@ -94,6 +94,14 @@ resource "aws_route53_zone" "outsider_dev" {
   name = "outsider.dev"
 }
 
+resource "aws_route53_record" "outsider_dev_bluesky" {
+  zone_id = aws_route53_zone.outsider_dev.zone_id
+  name    = "_atproto.outsider.dev"
+  type    = "TXT"
+  ttl     = "300"
+  records = ["did=did:plc:pj47jnzs2epyh6qzrjus3c3j"]
+}
+
 resource "aws_route53_record" "teslamate_outsider_dev" {
   zone_id = aws_route53_zone.outsider_dev.zone_id
   name    = "teslamate.outsider.dev"
