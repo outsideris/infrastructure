@@ -123,6 +123,10 @@ server {
   }
 
   location ~ \.php$ {
+    if ($arg_page) {
+        add_header  X-Robots-Tag "noindex, follow, nosnippet, noarchive";
+    }
+
     fastcgi_pass   unix:/var/run/php/php5.6-fpm.sock;
     fastcgi_index  index.php;
     fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
