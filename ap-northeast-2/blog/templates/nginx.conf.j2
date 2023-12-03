@@ -63,18 +63,7 @@ http {
     ##
     index index.php;
 
-    pagespeed on;
-    pagespeed FileCachePath "/var/cache/pagespeed/";
-    pagespeed FileCacheSizeKb            102400;
-    pagespeed FileCacheCleanIntervalMs   3600000;
-    pagespeed FileCacheInodeLimit        500000;
-    pagespeed LRUCacheKbPerProcess     8192;
-    pagespeed LRUCacheByteLimit        16384;
-
-    pagespeed EnableFilters defer_javascript;
-    pagespeed EnableFilters extend_cache;
-
-    fastcgi_cache_path /var/cache/nginxfastcgi levels=1:2 keys_zone=fastcgicache:10m inactive=10m max_size=64m;
+    fastcgi_cache_path /var/cache/nginxfastcgi levels=1:2 keys_zone=fastcgicache:100m inactive=48h max_size=1g;
     fastcgi_cache_key $scheme$request_method$host$request_uri;
     # note: can also use HTTP headers to form the cache key, e.g.
     #fastcgi_cache_key $scheme$request_method$host$request_uri$http_x_custom_header;

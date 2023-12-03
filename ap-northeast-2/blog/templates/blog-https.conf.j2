@@ -53,21 +53,6 @@ server {
     set $fastcgi_skipcache 1;
   }
 
-  # Ensure requests for pagespeed optimized resources go to the pagespeed handler
-  # and no extraneous headers get set.
-  location ~ "\.pagespeed\.([a-z]\.)?[a-z]{2}\.[^.]{10}\.[^.]+" {
-    add_header "" "";
-  }
-  location ~ "^/pagespeed_static/" { }
-  location ~ "^/ngx_pagespeed_beacon$" { }
-
-#location /ngx_pagespeed_statistics { allow 175.252.233.226; deny all; }
-#location /ngx_pagespeed_global_statistics { allow 175.252.233.226; deny all; }
-#location /ngx_pagespeed_message { allow 175.252.233.226; deny all; }
-#location /pagespeed_console { allow 175.252.233.226; deny all; }
-#location ~ ^/pagespeed_admin { allow 175.252.233.226; deny all; }
-#location ~ ^/pagespeed_global_admin { allow 175.252.233.226; deny all; }
-
   location /.well-known {
     root /home/ubuntu/www/well-known;
   }
@@ -124,7 +109,7 @@ server {
 
   location ~ \.php$ {
     if ($arg_page) {
-        add_header  X-Robots-Tag "noindex, follow, nosnippet, noarchive";
+      add_header  X-Robots-Tag "noindex, follow, nosnippet, noarchive";
     }
 
     fastcgi_pass   unix:/var/run/php/php5.6-fpm.sock;
@@ -137,6 +122,7 @@ server {
     add_header X-Cache $upstream_cache_status;
     add_header Strict-Transport-Security max-age=31536000;
     fastcgi_cache fastcgicache;
+    fastcgi_cache_valid 200 404 60m;
     fastcgi_cache_bypass $fastcgi_skipcache;
     fastcgi_no_cache $fastcgi_skipcache;
   }
