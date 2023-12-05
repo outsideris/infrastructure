@@ -1,4 +1,4 @@
-user www-data;
+user ubuntu;
 worker_processes auto;
 pid /run/nginx.pid;
 include /etc/nginx/modules-enabled/*.conf;
@@ -58,9 +58,6 @@ http {
     gzip_http_version 1.1;
     gzip_types text/plain text/css text/javascript application/x-javascript application/xml application/javascript application/json;
 
-    ##
-    # Pagespeed
-    ##
     index index.php;
 
     fastcgi_cache_path /var/cache/nginxfastcgi levels=1:2 keys_zone=fastcgicache:100m inactive=48h max_size=1g;

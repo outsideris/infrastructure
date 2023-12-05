@@ -17,90 +17,58 @@
   - name: install packages
     apt:
       pkg:
-        - git
         - curl
         - mcrypt
-        - zlib1g-dev
-        - libpcre3
-        - libpcre3-dev
+        - build-essential
         - libssl-dev
-        - libgd-dev
         - libgeoip-dev
         - libxslt1-dev
-        - mysql-client
-        - mysql-common
-        - mysql-server
-        - libmysqlclient-dev
-        - python-mysqldb
+        - gnupg2
+        - ca-certificates
+        - lsb-release
+        - ubuntu-keyring
+        - php5.6
+        - php5.6-common
         - php5.6-cli
         - php5.6-fpm
         - php5.6-mysql
         - php5.6-xml
-      update_cache: yes
-    become: true
-
-  # Node.js
-  - name: add nodesource deb
-    shell: curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    args:
-      warn: false
-
-  - name: install nodejs 10
-    apt:
-      pkg:
         - nodejs
+        - python3-pip
+        - pkg-config
+        - python3-pymysql
       update_cache: yes
     become: true
 
   # nginx
-  - name: check if nginx installed
-    stat:
-      path: /usr/sbin/nginx
-    register: nginx_bin
-
-  - name: install nginx with pagespeed
-    shell: >
-      bash <(curl -f -L -sS https://ngxpagespeed.com/install) -y
-      --nginx-version latest
-      --additional-nginx-configure-arguments
-      '--with-cc-opt="-g -O2 -fdebug-prefix-map=/build/nginx-FIJPpj/nginx-1.14.0=. -fstack-protector-strong -Wformat -Werror=format-security -fPIC -Wdate-time -D_FORTIFY_SOURCE=2"
-      --with-ld-opt="-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fPIC"
-      --prefix=/usr/share/nginx
-      --sbin-path=/usr/sbin/nginx
-      --conf-path=/etc/nginx/nginx.conf
-      --http-log-path=/var/log/nginx/access.log
-      --error-log-path=/var/log/nginx/error.log
-      --lock-path=/var/lock/nginx.lock
-      --pid-path=/run/nginx.pid
-      --modules-path=/usr/lib/nginx/modules
-      --http-client-body-temp-path=/var/lib/nginx/body
-      --http-fastcgi-temp-path=/var/lib/nginx/fastcgi
-      --http-proxy-temp-path=/var/lib/nginx/proxy
-      --http-scgi-temp-path=/var/lib/nginx/scgi
-      --http-uwsgi-temp-path=/var/lib/nginx/uwsgi
-      --with-pcre-jit
-      --with-http_ssl_module
-      --with-http_stub_status_module
-      --with-http_realip_module
-      --with-http_auth_request_module
-      --with-http_v2_module
-      --with-http_dav_module
-      --with-http_slice_module
-      --with-threads
-      --with-http_addition_module
-      --with-http_geoip_module=dynamic
-      --with-http_gunzip_module
-      --with-http_gzip_static_module
-      --with-http_image_filter_module=dynamic
-      --with-http_sub_module
-      --with-http_xslt_module=dynamic
-      --with-stream=dynamic
-      --with-stream_ssl_module
-      --with-mail=dynamic
-      --with-mail_ssl_module'
+  - name: Install nginx GPG key
+    become: true
+    shell: "wget -O- https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/nginx.gpg > /dev/null"
     args:
-      executable: /bin/bash
-    when: nginx_bin.stat.exists == False
+      creates: "/etc/apt/trusted.gpg.d/nginx.gpg"
+
+  - name: creates directory for nginx gpg
+    file:
+      path: "{{item}}"
+      state: directory
+      mode: 0600
+      group: root
+      owner: root
+    with_items:
+      - /root/.gnupg
+    become: yes
+
+  - name: Add nginx repo
+    become: true
+    shell: "echo \"deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx\" | tee /etc/apt/sources.list.d/nginx.list"
+    args:
+      creates: "/etc/apt/sources.list.d/nginx.list"
+
+  - name: add packages
+    apt:
+      pkg:
+        - nginx
+      update_cache: yes
     become: true
 
   - name: install nginx init script
@@ -183,8 +151,57 @@
       mode: 0644
 
   # MySQL
+  - name: Install Mysql GPG key
+    shell: "gpg --keyserver keyserver.ubuntu.com --recv-keys 467B942D3A79BD29"
+    become: true
+
+  - name: Install Mysql GPG key
+    shell: "gpg --export --armor 467B942D3A79BD29 | gpg --dearmour -o /etc/apt/trusted.gpg.d/mysql.5.7-key.gpg"
+    args:
+      creates: "/etc/apt/trusted.gpg.d/mysql.5.7-key.gpg"
+    become: true
+
+  - name: Add Mysql deb repository
+    shell: echo "deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-5.7" | sudo tee /etc/apt/sources.list.d/mysql.list
+    args:
+      creates: "/etc/apt/sources.list.d/mysql.list"
+    become: true
+
+  - name: install packages
+    apt:
+      pkg:
+        - libmysqlclient-dev
+      update_cache: yes
+    become: true
+
+  - name: install MySQL community client
+    shell: apt install -fy mysql-community-client=5.7.42-1ubuntu18.04
+    become: true
+
+  - name: install MySQL client
+    shell: apt install -fy mysql-client=5.7.42-1ubuntu18.04
+    become: true
+
+  - name: Install MySQL Server
+    apt:
+      pkg:
+        - mysql-community-server
+      update_cache: yes
+      state: present
+    become: true
+
   - name: MySQL | start the MySQL service
     action: service name=mysql state=started
+
+  - name: Install PyMySQL
+    pip:
+      name: pymysql
+      state: present
+
+  - name: Install mysqlclient
+    pip:
+      name: mysqlclient
+      state: present
 
   - name: MySQL | remove the test database
     mysql_db:
@@ -192,6 +209,8 @@
       state: absent
       login_user: root
       login_password: "{{mysql_root_password}}"
+      login_host: localhost
+      login_unix_socket: /var/run/mysqld/mysqld.sock
     become: true
 
   - name: MySQL | create a new database with name 'blog'
@@ -199,7 +218,9 @@
       name: blog
       state: present
       login_user: root
+      login_host: localhost
       login_password: "{{mysql_root_password}}"
+      login_unix_socket: /var/run/mysqld/mysqld.sock
     become: true
 
   - name: MySQL | create user for blog database
@@ -209,7 +230,9 @@
       password: "{{mysql_password}}"
       priv: blog.*:ALL,GRANT
       login_user: root
+      login_host: localhost
       login_password: "{{mysql_root_password}}"
+      login_unix_socket: /var/run/mysqld/mysqld.sock
     become: true
 
   - name: MySQL | ensure anonymous users are not in the database
@@ -218,7 +241,9 @@
       host: "{{item}}"
       state: absent
       login_user: root
+      login_host: localhost
       login_password: "{{mysql_root_password}}"
+      login_unix_socket: /var/run/mysqld/mysqld.sock
     with_items:
       - 127.0.0.1
       - ::1
@@ -241,7 +266,9 @@
       host: "{{item}}"
       password: "{{mysql_root_password}}"
       login_user: root
+      login_host: localhost
       login_password: "{{mysql_root_password}}"
+      login_unix_socket: /var/run/mysqld/mysqld.sock
     with_items:
       - 127.0.0.1
       - ::1
@@ -271,6 +298,8 @@
       target: /tmp/{{ansible_date_time.epoch}}.sql
       login_user: outsider
       login_password: "{{mysql_password}}"
+      login_host: localhost
+      login_unix_socket: /var/run/mysqld/mysqld.sock
     when: server_dumpfile.stat.exists == True
     become: true
 
@@ -296,28 +325,8 @@
       group: ubuntu
       mode: 0644
 
-  - name: set permissions for blog
-    file: path=/home/ubuntu/www/blog mode=0777 state=directory
-
-  - name: set permissions for blog skin
-    file: path=/home/ubuntu/www/blog/skin/blog mode=0777 state=directory
-
   - name: set permissions for .htaccess
     file: path=/home/ubuntu/www/blog/.htaccess mode=0666 state=file
-
-  - name: set permissions for attach directory
-    file: path=/home/ubuntu/www/blog/attach/1 mode=0777 state=directory
-
-  - name: creates directory for textcube
-    file:
-      path: "{{item}}"
-      state: directory
-      mode: 0777
-      group: staff
-      owner: ubuntu
-    with_items:
-      - /home/ubuntu/www/blog/cache
-    become: true
 
   - name: create a cron to backup
     cron:
@@ -331,6 +340,14 @@
 
   - name: remove default nginx config
     file: name=/etc/nginx/sites-enabled/default state=absent
+    become: true
+
+  - name: PHP | upload www.conf file
+    copy:
+      src: ./templates/php-fpm-www.conf
+      dest: /etc/php/5.6/fpm/pool.d/www.conf
+      owner: root
+      group: root
     become: true
 
   - name: restart php-fpm

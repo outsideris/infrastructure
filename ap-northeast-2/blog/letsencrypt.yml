@@ -29,8 +29,11 @@
     shell: snap install --classic certbot
     become: true
 
-  - name: make symlink for cerbot
-    shell: ln -s /snap/bin/certbot /usr/bin/certbot
+  - name: install packages
+    apt:
+      pkg:
+        - python3-certbot-nginx
+      update_cache: yes
     become: true
 
   - name: create letsencrypt certificate
@@ -56,10 +59,18 @@
     service: name=nginx state=restarted
     become: true
 
-  # FIXME: change to use latest certbot
   - name: add letsencrypt cronjob for cert renewal
     cron:
       name: letsencrypt_renewal
       special_time: weekly
       job: certbot certonly --nginx && service nginx reload
+    become: true
+
+  - name: overwrite to redirect http to https
+    template:
+      src: ./templates/blog-301.conf.j2
+      dest: /etc/nginx/sites-enabled/blog.conf
+      owner: root
+      group: root
+      mode: 0644
     become: true
