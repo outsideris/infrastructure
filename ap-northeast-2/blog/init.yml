@@ -34,6 +34,7 @@
         - php5.6-mysql
         - php5.6-xml
         - nodejs
+        - npm
         - python3-pip
         - pkg-config
         - python3-pymysql
