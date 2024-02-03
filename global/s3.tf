@@ -1,26 +1,15 @@
 // manage feeds that tweeted from nodejs-ko blog
 resource "aws_s3_bucket" "nodejs-ko" {
   bucket = "nodejs-ko"
-  acl    = "private"
 }
 
 // terraform state for sideeffect
 resource "aws_s3_bucket" "terraform-state" {
   bucket = "kr.sideeffect.terraform.state"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
 
   tags = {
     Name        = "terraform state"
     Environment = "Prod"
-  }
-
-  logging {
-    target_bucket = aws_s3_bucket.logs.id
-    target_prefix = "terraform-state/"
   }
 
   lifecycle {
@@ -31,8 +20,6 @@ resource "aws_s3_bucket" "terraform-state" {
 // for logging
 resource "aws_s3_bucket" "logs" {
   bucket = "kr.sideeffect.logs"
-  acl    = "log-delivery-write"
-  policy = data.aws_iam_policy_document.aws_s3_bucket_logs.json
 }
 
 data "aws_iam_policy_document" "aws_s3_bucket_logs" {
@@ -99,12 +86,11 @@ data "aws_iam_policy_document" "aws_s3_bucket_logs" {
 
 resource "aws_s3_bucket" "labs_sideeffect_kr" {
   bucket = "kr.sideeffect.labs"
-  acl    = "private"
-  policy = data.aws_iam_policy_document.labs_sideeffect_kr.json
+}
 
-  website {
-    index_document = "index.html"
-  }
+resource "aws_s3_bucket_policy" "labs_sideeffect_kr" {
+  bucket = aws_s3_bucket.labs_sideeffect_kr.id
+  policy = data.aws_iam_policy_document.labs_sideeffect_kr.json
 }
 
 data "aws_iam_policy_document" "labs_sideeffect_kr" {
@@ -119,14 +105,21 @@ data "aws_iam_policy_document" "labs_sideeffect_kr" {
   }
 }
 
+resource "aws_s3_bucket_website_configuration" "labs_sideeffect_kr" {
+  bucket = aws_s3_bucket.labs_sideeffect_kr.id
+
+  index_document {
+    suffix = "index.html"
+  }
+}
+
 resource "aws_s3_bucket" "nodejs_sideeffect_kr" {
   bucket = "kr.sideeffect.nodejs"
-  acl    = "private"
-  policy = data.aws_iam_policy_document.nodejs_sideeffect_kr.json
+}
 
-  website {
-    index_document = "index.html"
-  }
+resource "aws_s3_bucket_policy" "nodejs_sideeffect_kr" {
+  bucket = aws_s3_bucket.nodejs_sideeffect_kr.id
+  policy = data.aws_iam_policy_document.nodejs_sideeffect_kr.json
 }
 
 data "aws_iam_policy_document" "nodejs_sideeffect_kr" {
@@ -141,38 +134,14 @@ data "aws_iam_policy_document" "nodejs_sideeffect_kr" {
   }
 }
 
+resource "aws_s3_bucket_website_configuration" "nodejs_sideeffect_kr" {
+  bucket = aws_s3_bucket.nodejs_sideeffect_kr.id
+
+  index_document {
+    suffix = "index.html"
+  }
+}
+
 resource "aws_s3_bucket" "test_outsider_ne_kr" {
   bucket = "kr.ne.outsider.test"
-  acl    = "private"
-}
-
-resource "aws_s3_bucket" "sideeffect_kops_state_store" {
-  bucket = "kr.sideeffect-kops-state-store"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-
-  tags = {
-    Name        = "kops state store"
-    Environment = "Test"
-  }
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "aws_s3_bucket" "kops_state_cluster_outsider_dev" {
-  bucket = "kops-state.cluster.outsider.dev"
-  acl    = "private"
 }

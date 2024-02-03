@@ -1,68 +1,10 @@
 # users
 
-## for apex
-resource "aws_iam_user" "apex-basic" {
-  name          = "apex-basic"
-  path          = "/"
-  force_destroy = true
-}
-
 ## it's me
 resource "aws_iam_user" "outsider" {
   name          = "outsider"
   path          = "/"
   force_destroy = true
-}
-
-resource "aws_iam_user" "kops_operator" {
-  name          = "kops-operator"
-  path          = "/"
-  force_destroy = true
-}
-
-resource "aws_iam_user_policy_attachment" "kops_operator_ec2_full_access" {
-  user       = aws_iam_user.kops_operator.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
-}
-
-resource "aws_iam_user_policy_attachment" "kops_operator_route53_full_access" {
-  user       = aws_iam_user.kops_operator.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
-}
-
-resource "aws_iam_user_policy_attachment" "kops_operator_s3_full_access" {
-  user       = aws_iam_user.kops_operator.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-}
-
-resource "aws_iam_user_policy_attachment" "kops_operator_iam_full_access" {
-  user       = aws_iam_user.kops_operator.name
-  policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
-}
-
-resource "aws_iam_user_policy_attachment" "kops_operator_vpc_full_access" {
-  user       = aws_iam_user.kops_operator.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonVPCFullAccess"
-}
-
-# roles
-resource "aws_iam_role" "nodejs-ko-twitter_lambda_function" {
-  name               = "nodejs-ko-twitter_lambda_function"
-  path               = "/"
-  assume_role_policy = data.aws_iam_policy_document.nodejs-ko-twitter_lambda_function.json
-}
-
-data "aws_iam_policy_document" "nodejs-ko-twitter_lambda_function" {
-  statement {
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["lambda.amazonaws.com"]
-    }
-  }
 }
 
 resource "aws_iam_role" "ecs_instance_role" {
@@ -139,82 +81,6 @@ data "aws_iam_policy_document" "config_service" {
 }
 
 # policy
-resource "aws_iam_policy" "apex-default" {
-  name        = "apex-default"
-  path        = "/"
-  description = "apex default"
-  policy      = data.aws_iam_policy_document.apex-default.json
-}
-
-data "aws_iam_policy_document" "apex-default" {
-  statement {
-    actions = [
-      "iam:CreateRole",
-      "iam:CreatePolicy",
-      "iam:AttachRolePolicy",
-      "iam:PassRole",
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DeleteNetworkInterface",
-      "ec2:DescribeSecurityGroups",
-      "ec2:DescribeSubnets",
-      "ec2:DescribeVpcs",
-      "ec2:DescribeInstances",
-      "ec2:AttachNetworkInterface",
-      "autoscaling:CompleteLifecycleAction",
-      "lambda:GetFunction",
-      "lambda:UpdateFunctionConfiguration",
-      "lambda:CreateFunction",
-      "lambda:DeleteFunction",
-      "lambda:InvokeFunction",
-      "lambda:GetFunctionConfiguration",
-      "lambda:UpdateFunctionCode",
-      "lambda:CreateAlias",
-      "lambda:UpdateAlias",
-      "lambda:GetAlias",
-      "lambda:ListVersionsByFunction",
-      "lambda:AddPermission",
-      "lambda:GetPolicy",
-      "lambda:RemovePermission",
-      "logs:FilterLogEvents",
-      "cloudwatch:GetMetricStatistics",
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-      "apigateway:*",
-      "iam:*",
-      "events:*",
-      "s3:*",
-      "dynamodb:GetItem",
-      "dynamodb:PutItem",
-      "dynamodb:DeleteItem",
-    ]
-
-    resources = [
-      "*",
-    ]
-  }
-}
-
-resource "aws_iam_policy" "nodejs-ko-twitter_lambda_logs" {
-  name        = "nodejs-ko-twitter_lambda_logs"
-  path        = "/"
-  description = "Allow lambda_function to utilize CloudWatchLogs. Created by apex(1)."
-  policy      = data.aws_iam_policy_document.nodejs-ko-twitter_lambda_logs.json
-}
-
-data "aws_iam_policy_document" "nodejs-ko-twitter_lambda_logs" {
-  statement {
-    actions = [
-      "logs:*",
-    ]
-
-    resources = [
-      "*",
-    ]
-  }
-}
-
 resource "aws_iam_policy" "config_service_delivery_permission" {
   name        = "config-service-delivery-permission"
   path        = "/"
@@ -261,22 +127,6 @@ data "aws_iam_policy_document" "config_service_delivery_permission" {
 }
 
 # policy attachment
-resource "aws_iam_policy_attachment" "apex-default-policy-attachment" {
-  name       = "apex-default-policy-attachment"
-  policy_arn = aws_iam_policy.apex-default.arn
-  groups     = [aws_iam_group.apex.name]
-  users      = []
-  roles      = []
-}
-
-resource "aws_iam_policy_attachment" "nodejs-ko-twitter_lambda_logs-policy-attachment" {
-  name       = "nodejs-ko-twitter_lambda_logs-policy-attachment"
-  policy_arn = aws_iam_policy.nodejs-ko-twitter_lambda_logs.arn
-  groups     = []
-  users      = []
-  roles      = [aws_iam_role.nodejs-ko-twitter_lambda_function.name]
-}
-
 resource "aws_iam_policy_attachment" "AWSLambdaFullAccess-policy-attachment" {
   name       = "AWSLambdaFullAccess-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
@@ -289,16 +139,8 @@ resource "aws_iam_policy_attachment" "IAMFullAccess-policy-attachment" {
   name       = "IAMFullAccess-policy-attachment"
   policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
   groups     = []
-  users      = ["kops-operator", aws_iam_user.outsider.name]
+  users      = [aws_iam_user.outsider.name]
   roles      = []
-}
-
-resource "aws_iam_policy_attachment" "AmazonS3FullAccess-policy-attachment" {
-  name       = "AmazonS3FullAccess-policy-attachment"
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-  groups     = []
-  users      = ["kops-operator", aws_iam_user.outsider.name]
-  roles      = [aws_iam_role.nodejs-ko-twitter_lambda_function.name]
 }
 
 resource "aws_iam_policy_attachment" "AdministratorAccess-policy-attachment" {
@@ -326,16 +168,6 @@ resource "aws_iam_policy_attachment" "config_service_delivery_permission_attachm
 }
 
 # group
-resource "aws_iam_group" "apex" {
-  name = "apex"
-  path = "/"
-}
-
-resource "aws_iam_group_membership" "apex" {
-  name  = "apex-group-membership"
-  users = [aws_iam_user.apex-basic.name]
-  group = aws_iam_group.apex.name
-}
 
 # instance profiles
 resource "aws_iam_instance_profile" "ecs_instance_role" {

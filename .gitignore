@@ -11,3 +11,4 @@ credentials.json
 .idea/
 temp/
 *.retry
+.env

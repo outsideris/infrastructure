@@ -1,6 +1,6 @@
 # VPC terraform
 variable "blog_instance_ip" {
-  default = "13.125.184.119"
+  default = "3.35.135.198"
 }
 
 data "terraform_remote_state" "vpc" {

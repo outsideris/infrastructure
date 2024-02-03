@@ -4,7 +4,7 @@ resource "aws_cloudfront_origin_access_identity" "labs_sideeffect_kr" {
 
 resource "aws_cloudfront_distribution" "labs_sideeffect_kr" {
   origin {
-    domain_name = aws_s3_bucket.labs_sideeffect_kr.website_endpoint
+    domain_name = aws_s3_bucket_website_configuration.labs_sideeffect_kr.website_endpoint
     origin_path = ""
     origin_id   = "S3-${aws_s3_bucket.labs_sideeffect_kr.bucket}"
 
@@ -67,7 +67,7 @@ resource "aws_cloudfront_origin_access_identity" "nodejs_sideeffect_kr" {
 
 resource "aws_cloudfront_distribution" "nodejs_sideeffect_kr" {
   origin {
-    domain_name = aws_s3_bucket.nodejs_sideeffect_kr.website_endpoint
+    domain_name = aws_s3_bucket_website_configuration.nodejs_sideeffect_kr.website_endpoint
     origin_path = ""
     origin_id   = "S3-${aws_s3_bucket.nodejs_sideeffect_kr.bucket}"
 
