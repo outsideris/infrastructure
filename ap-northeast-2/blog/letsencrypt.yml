@@ -3,6 +3,7 @@
   vars:
     letsencrypt_email: outsideris@gmail.com
     domain_name: blog.outsider.ne.kr
+    root_domain_name: outsider.ne.kr
 
   tasks:
   - name: install letsencrypt
@@ -40,6 +41,10 @@
     shell: certbot --nginx -n -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
     become: true
 
+  - name: create letsencrypt certificate for root
+    shell: certbot --nginx -n -m {{ letsencrypt_email }} --agree-tos -d {{ root_domain_name }}
+    become: true
+
   - name: Generate dhparams
     shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
     args:
@@ -50,6 +55,15 @@
     template:
       src: ./templates/blog-https.conf.j2
       dest: /etc/nginx/sites-enabled/blog-https.conf
+      owner: root
+      group: root
+      mode: 0644
+    become: true
+
+  - name: add nginx root SSL configurations
+    template:
+      src: ./templates/root-https.conf.j2
+      dest: /etc/nginx/sites-enabled/root-https.conf
       owner: root
       group: root
       mode: 0644
